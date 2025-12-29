@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script>
-        document.documentElement.style.visibility = 'hidden';
-        document.addEventListener('DOMContentLoaded', () => {
-            // Tiny delay to allow Tailwind to inject generated styles
-            setTimeout(() => {
-                document.documentElement.style.visibility = 'visible';
-            }, 50);
-        });
-    </script>
+    document.documentElement.style.visibility = 'hidden';
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            document.documentElement.style.visibility = 'visible';
+            // Trigger a resize event to wake up the star canvas
+            window.dispatchEvent(new Event('resize'));
+        }, 100);
+    });
+</script>
 
     <title>Tanisha | Cloud Engineer & Backend Developer</title>
 
@@ -91,7 +92,7 @@
 <body class="antialiased">
     
     <body class="antialiased">
-    <canvas id="star-canvas"></canvas> <div class="bg-glow-top"></div>
+    <canvas id="star-canvas" style="display: block;"></canvas><div class="bg-glow-top"></div>
     <div class="bg-glow-right"></div>
 
     <header class="fixed top-6 left-0 right-0 z-50 flex justify-center">
@@ -645,22 +646,20 @@
             if(typeTextElement) type();
 
             // --- Star Background ---
-            // --- Star Background ---
 const canvas = document.getElementById('star-canvas');
 const ctx = canvas.getContext('2d');
 let stars = [];
 const numStars = 200;
 
 function resizeCanvas() {
-    // Ensure canvas matches the window exactly even on high-DPI screens
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 
-// Add this: Recalculate stars if the window size is 0 initially
+// Re-generate stars whenever the window resizes or becomes visible
 window.addEventListener('resize', () => {
     resizeCanvas();
-    stars = []; // Re-generate stars to match new bounds
+    stars = []; 
     for (let i = 0; i < numStars; i++) stars.push(new Star());
 });
 
@@ -669,8 +668,8 @@ class Star {
         this.reset();
     }
     reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * (canvas.width || window.innerWidth);
+        this.y = Math.random() * (canvas.height || window.innerHeight);
         this.size = Math.random() * 1.5;
         this.speed = Math.random() * 0.2 + 0.1;
         this.opacity = Math.random();
@@ -689,8 +688,10 @@ class Star {
 }
 
 function animateStars() {
-    // If canvas width is 0 (can happen on first load), try to resize it
-    if (canvas.width === 0) resizeCanvas();
+    // Systems Check: If canvas is still 0, try one last resize
+    if (canvas.width === 0 && window.innerWidth > 0) {
+        resizeCanvas();
+    }
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     stars.forEach(star => {
@@ -700,10 +701,11 @@ function animateStars() {
     requestAnimationFrame(animateStars);
 }
 
-// Initialize stars only after we have a valid width/height
+// Initial Kick-off
 resizeCanvas();
 for (let i = 0; i < numStars; i++) stars.push(new Star());
 animateStars();
+
 
             // --- Scroll Animation ---
             const observer = new IntersectionObserver((entries) => {
