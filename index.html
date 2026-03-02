@@ -4,98 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script>
-    document.documentElement.style.visibility = 'hidden';
-    window.addEventListener('load', () => {
-        document.documentElement.style.visibility = 'visible';
-    });
-</script>
 
     <title>Tanisha | Cloud Engineer & Backend Developer</title>
 
     <style>
-        :root { --bg-dark: #030014; }
+        :root { 
+            --bg-dark: #03050c; 
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --neon-purple: #a855f7; 
+        }
+
         html { background-color: var(--bg-dark); }
         
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: #e0e0e0;
             overflow-x: hidden;
             margin: 0;
-            position: relative; /* Essential for stacking context */
+            position: relative;
         }
 
-        /* --- STAR CANVAS FIX --- */
-        /* Z-Index 0 ensures it sits ON TOP of body background, but BELOW content */
-        #star-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0; /* Sits on top of background, but below text */
-    pointer-events: none;
-}
-        /* Ensure content sits above the stars */
         main, header, footer {
             position: relative;
             z-index: 10; 
         }
 
-        /* --- Deep Background Glows --- */
-        .bg-glow-top {
-            position: absolute; width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(112,0,223,0.15) 0%, rgba(3,0,20,0) 70%);
-            top: -200px; left: 50%; transform: translateX(-50%);
-            z-index: 0; pointer-events: none;
+        /* --- THE CLOUD AURORA --- */
+        .aurora-wrapper {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.6;
         }
-        .bg-glow-right {
-            position: fixed; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(76, 29, 149, 0.1) 0%, rgba(3,0,20,0) 70%);
-            top: 20%; right: -10%;
-            z-index: 0; pointer-events: none;
+        .aurora-blob {
+            position: absolute; border-radius: 50%; filter: blur(120px);
+            animation: drift 20s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(124, 58, 237, 0.3); } 
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: rgba(13, 148, 136, 0.2); animation-delay: -5s; } 
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: rgba(236, 72, 153, 0.15); animation-delay: -10s; } 
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
         }
 
-        /* --- UI Card Style --- */
-        .awesome-card {
-            background: rgba(255, 255, 255, 0.03);
-            background-color: rgba(10, 10, 26, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative; overflow: hidden;
+        /* --- THE FLASHLIGHT GRID --- */
+        .flashlight-bg {
+            position: fixed; inset: 0; z-index: 1; pointer-events: none;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(350px circle at var(--x, 50vw) var(--y, 50vh), black 0%, transparent 100%);
+            -webkit-mask-image: radial-gradient(350px circle at var(--x, 50vw) var(--y, 50vh), black 0%, transparent 100%);
         }
-        .awesome-card::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-            opacity: 0; transition: opacity 0.5s; pointer-events: none;
+
+        /* --- THE EDITORIAL GLASS BENTO --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            position: relative;
         }
-        .awesome-card:hover::before { opacity: 1; }
-        .awesome-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        
-        /* Typography & Utils */
-        .text-gradient {
-            background: linear-gradient(to right, #e2e8f0, #a855f7, #ec4899);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+        .glass-panel::before, .glass-panel::after {
+            content: '+';
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15);
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1;
+            pointer-events: none;
         }
-        .type-text::after { content: '|'; animation: blink 1s infinite; color: #a855f7; }
-        @keyframes blink { 50% { opacity: 0; } }
-        .fade-in-up {
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        .glass-panel::before { top: 20px; right: 20px; }
+        .glass-panel::after { bottom: 20px; left: 20px; }
+        nav.glass-panel::before, nav.glass-panel::after { display: none; }
+
+        /* --- HOVER --- */
+        .premium-hover { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .premium-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(168, 85, 247, 0.25); 
+            border-color: rgba(168, 85, 247, 0.4);
         }
+
+        /* --- TERMINAL HEADER --- */
+        .terminal-header {
+            background: rgba(0,0,0,0.4); padding: 12px 16px; display: flex; align-items: center; gap: 8px; 
+            border-bottom: 1px solid var(--glass-border); 
+            border-top-left-radius: 24px; border-top-right-radius: 24px;
+        }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        /* --- SCROLL ANIMATIONS --- */
+        .fade-in-up { opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- THE LINUX BOOT SCREEN --- */
+        #boot-screen {
+            position: fixed; inset: 0; background-color: #000; z-index: 99999;
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem;
+            font-family: 'JetBrains Mono', monospace; color: #22c55e; font-size: 14px;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .boot-hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+        #boot-text p { margin: 2px 0; opacity: 0; animation: typeLine 0.1s forwards; }
+        @keyframes typeLine { to { opacity: 1; } }
+
+        .main-content { opacity: 0; transition: opacity 1.5s ease-in; }
+        .main-content.loaded { opacity: 1; }
     </style>
     
     <noscript><style>html { visibility: visible; }</style></noscript>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    mono: ['"JetBrains Mono"', 'monospace'],
+                }
+            }
+        }
+    }
+    </script>
 
     <meta name="description" content="Portfolio of Tanisha, an AWS Certified Cloud Practitioner and Backend Developer building serverless systems.">
     <meta property="og:title" content="Tanisha | Cloud Engineer">
@@ -103,634 +143,445 @@
     <meta property="og:type" content="website">
 </head>
 <body class="antialiased">
-    <canvas id="star-canvas"></canvas>
-    
-    <div class="bg-glow-top"></div>
-    <div class="bg-glow-right"></div>
 
-    <header class="fixed top-6 left-0 right-0 z-50 flex justify-center">
-    <nav class="awesome-card rounded-full px-6 py-3 flex items-center space-x-8 bg-[#030014]/80 border-white/10 backdrop-blur-md">
-        <a href="#" class="text-white font-bold tracking-wider hover:text-purple-400 transition-colors">TANISHA</a>
-        
-        <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-400">
-            <a href="#about" class="hover:text-white transition-colors">About</a>
-            <a href="#tech-stack" class="hover:text-white transition-colors">Stack</a>
-            <a href="#projects" class="hover:text-white transition-colors">Projects</a>
-            <a href="#journey" class="hover:text-white transition-colors">My Journey</a>
-        </div>
+<div id="boot-screen">
+    <div id="boot-text" class="max-w-3xl w-full"></div>
+    <div class="mt-2 animate-pulse w-2 h-4 bg-green-500"></div>
+</div>
 
-        <div class="hidden md:flex items-center space-x-4">
-            <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            </a>
-            <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
-            <a href="#contact" class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all border border-white/5 border-purple-500/50">
-                Hire Me
-            </a>
-        </div>
+<div id="main-wrapper" class="main-content">
 
-        <button id="mobile-btn" class="md:hidden text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-        </button>
-    </nav>
-    
-    <div id="mobile-menu" class="hidden fixed top-24 left-4 right-4 z-[60] awesome-card rounded-xl p-5 flex-col space-y-4 md:hidden bg-[#0a0a1a]">
-        <a href="#about" class="text-gray-300 block hover:text-white">About</a>
-        <a href="#projects" class="text-gray-300 block hover:text-white">Projects</a>
-        <a href="#contact" class="text-purple-400 font-bold block">Contact</a>
-        
-        <div class="flex items-center space-x-6 pt-4 border-t border-white/10">
-            <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                <span class="text-sm">GitHub</span>
-            </a>
-            <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                <span class="text-sm">LinkedIn</span>
-            </a>
-        </div>
+    <div class="aurora-wrapper">
+        <div class="aurora-blob blob-1"></div>
+        <div class="aurora-blob blob-2"></div>
+        <div class="aurora-blob blob-3"></div>
     </div>
-</header>
+    <div class="flashlight-bg" id="flashlight"></div>
+
+    <header class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <nav class="glass-panel !rounded-full px-6 py-3 flex items-center justify-between w-full max-w-4xl">
+            <a href="#" class="text-white font-semibold tracking-widest text-sm hover:text-purple-400 transition-colors">TANISHA</a>
+            
+            <div class="hidden md:flex items-center space-x-8 text-xs font-mono text-gray-400 uppercase tracking-widest">
+                <a href="#about" class="hover:text-white transition-colors">About</a>
+                <a href="#tech-stack" class="hover:text-white transition-colors">Stack</a>
+                <a href="#projects" class="hover:text-white transition-colors">Projects</a>
+                <a href="#experience" class="hover:text-white transition-colors">Experience</a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-5">
+                <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                <a href="#contact" class="text-green-400 text-[10px] font-mono uppercase tracking-widest px-4 py-2 border border-green-500/30 !rounded-md bg-green-500/10 hover:bg-green-500 hover:text-white premium-hover transition-all duration-300 shadow-[0_0_10px_rgba(34,197,94,0.2)] hover:shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+                    [ Hire_Me ]
+                </a>
+            </div>
+
+            <button id="mobile-btn" class="md:hidden text-gray-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </nav>
+        
+        <div id="mobile-menu" class="hidden fixed top-24 left-4 right-4 z-[60] rounded-xl border border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl p-6 flex-col space-y-6 md:hidden shadow-2xl">
+            <div class="flex flex-col space-y-4 text-sm font-mono uppercase tracking-widest text-gray-400">
+                <a href="#about" class="block hover:text-white transition-colors">About</a>
+                <a href="#tech-stack" class="block hover:text-white transition-colors">Tech Stack</a>
+                <a href="#projects" class="block hover:text-white transition-colors">Projects</a>
+                <a href="#experience" class="block hover:text-white transition-colors">Experience</a>
+                <a href="#contact" class="text-white pt-4 border-t border-white/10 w-fit">Contact</a>
+            </div>
+            
+            <div class="flex items-center space-x-6 pt-2">
+                <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                    <span class="sr-only">GitHub</span>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                    <span class="sr-only">LinkedIn</span>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+            </div>
+        </div>
+    </header>
 
     <main class="relative z-10 pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
 
-        <section id="hero" class="min-h-[85vh] flex flex-col justify-center items-start fade-in-up">
-            <a href="#contact" class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-3 py-1 mb-6 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 cursor-pointer group">
-                <span class="relative flex h-2 w-2">
+        <section class="min-h-[80vh] flex flex-col justify-center max-w-4xl pt-20 fade-in-up">
+            <div class="flex items-center space-x-3 mb-8">
+                <span class="relative flex h-2.5 w-2.5">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                 </span>
-                <span class="text-xs text-purple-200 uppercase tracking-widest font-semibold group-hover:text-purple-300">Open for Opportunities</span>
-            </a>
+                <span class="text-sm font-medium text-gray-400 tracking-wide">Available for roles starting May 2026</span>
+            </div>
 
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-6">
-                Hi, I'm<br>
-                <span class="text-gradient">Tanisha</span> <br>
-                <span class="type-text"></span>
+            <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight tracking-tight mb-6">
+                Hi, I'm Tanisha. <br>
+                <span class="text-gray-500">I build backend logic <br> and cloud infrastructure.</span>
             </h1>
 
-            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
-                AWS Certified Cloud Practitioner & Backend Developer. I build resilient, serverless systems and automate cloud infrastructure at scale.
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed mb-8">
+                I am an AWS Certified Cloud Practitioner and final-year student in India. I love organizing massive tech events, but right now, my main focus is writing clean Python and understanding how the internet works under the hood.
             </p>
 
-            <div class="flex flex-wrap gap-4">
-                <a href="#projects" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-8 py-3 rounded-full font-bold text-lg transition-all shadow-lg shadow-purple-500/25">
-                    Explore Projects
+            <div class="flex flex-wrap items-center gap-6 mb-12">
+                <a href="Tanisha-resume-2026.pdf" target="_blank" class="px-6 py-3 font-mono text-xs uppercase tracking-widest bg-purple-500/10 text-purple-400 border border-purple-500/50 rounded-md hover:bg-purple-500 hover:text-white transition-all shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    [ Resume.pdf ]
                 </a>
-                <a href="resume.pdf" target="_blank" class="awesome-card px-8 py-3 rounded-full font-bold text-lg text-white hover:bg-white/5">
-                    Resume
-                </a>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 w-full">
-                <div class="awesome-card p-4 rounded-xl text-center">
-                    <div class="text-2xl font-bold text-white">4+</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Cloud Systems</div>
-                </div>
-                <div class="awesome-card p-4 rounded-xl text-center">
-                    <div class="text-2xl font-bold text-white">AWS</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Certified</div>
-                </div>
-                <div class="awesome-card p-4 rounded-xl text-center">
-                    <div class="text-2xl font-bold text-white">8.0</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">CGPA</div>
-                </div>
-                <div class="awesome-card p-4 rounded-xl text-center">
-                    <div class="text-2xl font-bold text-white">May</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">2026 Grad</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="py-20 fade-in-up relative z-10">
-            <div class="max-w-6xl mx-auto px-4">
-                <div class="mb-12">
-                    <h2 class="text-xs font-bold text-purple-400 tracking-widest uppercase mb-2">The Person Behind the Code</h2>
-                    <h3 class="text-3xl font-bold text-white">About Me</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="md:col-span-2 awesome-card rounded-2xl p-8 border border-white/5 bg-white/5 hover:border-purple-500/30 transition-all duration-300 flex flex-col justify-center">
-                        <p class="text-xl text-gray-200 leading-relaxed mb-6">
-                            I am a <span class="text-purple-400 font-bold">Cloud Engineer & Python Developer</span> with a simple philosophy: automate the boring stuff and build infrastructure that scales effortlessly.
-                        </p>
-                        <p class="text-gray-400 mb-6 leading-relaxed">
-                            While many write code that just "works," I focus on what happens <em>after</em> deployment. I am deep-diving into <span class="text-white">Asynchronous Processing</span>, <span class="text-white">Event-Driven Architecture</span>, and AWS cost-optimization to ensure systems remain resilient under load.
-                        </p>
-                        <p class="text-gray-400 leading-relaxed">
-                            Currently, I am executing <strong class="text-white">"The Winter Arc"</strong>. This is a rigorous, self-imposed engineering sprint where I am building production-grade cloud systems to master high-concurrency backend patterns.
-                        </p>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="awesome-card rounded-xl p-6 border border-white/5 bg-white/5 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all duration-300 group">
-                            <div class="flex items-center space-x-3 mb-2">
-                                <div class="p-2 rounded-lg bg-white/5 text-purple-400 group-hover:text-purple-300 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
-                                </div>
-                                <h4 class="text-gray-400 text-xs uppercase tracking-widest">Education</h4>
-                            </div>
-                            <div class="font-bold text-white text-lg">Banasthali Vidyapith</div>
-                            <div class="text-sm text-gray-500 mt-1">BCA Final Year • 2026</div>
-                        </div>
-                        <div class="awesome-card rounded-xl p-6 border border-white/5 bg-white/5 hover:border-green-500/50 hover:bg-green-500/5 transition-all duration-300 group">
-                            <div class="flex items-center space-x-3 mb-2">
-                                 <div class="p-2 rounded-lg bg-white/5 text-green-400 group-hover:text-green-300 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                </div>
-                                <h4 class="text-gray-400 text-xs uppercase tracking-widest">Current Focus</h4>
-                            </div>
-                            <div class="font-bold text-white text-lg">The Winter Arc</div>
-                            <div class="text-sm text-gray-500 mt-1">Building Production Systems</div>
-                        </div>
-                         <div class="awesome-card rounded-xl p-6 border border-white/5 bg-white/5 hover:border-orange-500/50 hover:bg-orange-500/5 transition-all duration-300 group">
-                            <div class="flex items-center space-x-3 mb-2">
-                                <div class="p-2 rounded-lg bg-white/5 text-orange-400 group-hover:text-orange-300 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                </div>
-                                <h4 class="text-gray-400 text-xs uppercase tracking-widest">Based In</h4>
-                            </div>
-                            <div class="font-bold text-white text-lg">India</div>
-                            <div class="text-sm text-gray-500 mt-1">Remote / Hybrid</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tech-stack" class="py-20 fade-in-up">
-            <div class="flex justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-xs font-bold text-purple-400 tracking-widest uppercase mb-2">Technical Arsenal</h2>
-                    <h3 class="text-3xl font-bold text-white">My Tech Stack</h3>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-2">Cloud & Infra</h4>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-orange-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" class="w-8 h-8" alt="AWS">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">AWS</h5>
-                            <p class="text-xs text-orange-300">Certified</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-purple-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" class="w-8 h-8" alt="Terraform">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Terraform</h5>
-                            <p class="text-xs text-purple-300">IaC</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-red-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" class="w-8 h-8" alt="Redis">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Redis</h5>
-                            <p class="text-xs text-red-300">Caching</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-blue-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <svg class="w-8 h-8 text-[#4053D6]" viewBox="0 0 24 24" fill="currentColor">
-                                 <path d="M5 2C2.239 2 0 4.239 0 7C0 9.761 2.239 12 5 12C7.761 12 10 9.761 10 7C10 4.239 7.761 2 5 2ZM5 10C3.343 10 2 8.657 2 7C2 5.343 3.343 4 5 4C6.657 4 8 5.343 8 7C8 8.657 6.657 10 5 10ZM19 2C16.239 2 14 4.239 14 7C14 9.761 16.239 12 19 12C21.761 12 24 9.761 24 7C24 4.239 21.761 2 19 2ZM19 10C17.343 10 16 8.657 16 7C16 5.343 17.343 4 19 4C20.657 4 22 5.343 22 7C22 8.657 20.657 10 19 10ZM12 14C9.239 14 7 16.239 7 19C7 21.761 9.239 24 12 24C14.761 24 17 21.761 17 19C17 16.239 14.761 14 12 14ZM12 22C10.343 22 9 20.657 9 19C9 17.343 10.343 16 12 16C13.657 16 15 17.343 15 19C15 20.657 13.657 22 12 22Z"/>
-                                <path d="M12.5 1L10 6H13L10.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" transform="translate(-0.5, 0)"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">DynamoDB</h5>
-                            <p class="text-xs text-blue-300">NoSQL</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-2">Frontend</h4>
-                    
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-red-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/streamlit/streamlit-original.svg" class="w-8 h-8" alt="Streamlit">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Streamlit</h5>
-                            <p class="text-xs text-red-300">Data Viz</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-cyan-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" class="w-8 h-8" alt="Tailwind">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Tailwind</h5>
-                            <p class="text-xs text-cyan-300">Design</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-yellow-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-8 h-8 rounded" alt="JS">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">JavaScript</h5>
-                            <p class="text-xs text-yellow-300">ES6+</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-2">Backend</h4>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-blue-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="w-8 h-8" alt="Python">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Python</h5>
-                            <p class="text-xs text-blue-300">Boto3</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-red-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" class="w-8 h-8" alt="Java">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Java(Basics)</h5>
-                            <p class="text-xs text-red-300">OOP</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-purple-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" class="w-8 h-8" alt="PHP">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">PHP</h5>
-                            <p class="text-xs text-purple-300">Scripts</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-2">Tools</h4>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-orange-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" class="w-8 h-8" alt="Git">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Git/GitHub</h5>
-                            <p class="text-xs text-orange-300">Version Control</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-yellow-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" class="w-8 h-8" alt="Linux">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Linux</h5>
-                            <p class="text-xs text-yellow-300">Terminal</p>
-                        </div>
-                    </div>
-                    <div class="awesome-card rounded-xl p-4 flex items-center space-x-4 hover:border-orange-500/50 group">
-                        <div class="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                             <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" class="w-8 h-8" alt="Postman">
-                        </div>
-                        <div>
-                            <h5 class="text-white font-semibold">Postman</h5>
-                            <p class="text-xs text-orange-300">API Testing</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="projects" class="py-20 fade-in-up">
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h2 class="text-xs font-bold text-purple-400 tracking-widest uppercase mb-2">Highlights</h2>
-                    <h3 class="text-3xl font-bold text-white">Featured Projects</h3>
-                </div>
-                <a href="https://github.com/Tannishaa" target="_blank" class="text-sm text-purple-400 hover:text-white transition-colors">View all on GitHub →</a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="awesome-card rounded-2xl p-8 border-t-2 border-green-500 flex flex-col group md:col-span-2">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs font-bold bg-green-500/20 text-green-300 px-2 py-1 rounded">FLAGSHIP</span>
-                            <span class="text-xs font-bold bg-white/5 text-gray-400 px-2 py-1 rounded">Microservices</span>
-                        </div>
-                        <div class="flex items-center space-x-1 text-green-400 text-xs font-bold">
-                            <span>Terraform + Redis</span>
-                        </div>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors">Flux-Order: High-Concurrency System</h3>
-                    <p class="text-gray-400 text-sm mb-6 leading-relaxed max-w-2xl">
-                        A resilient ticketing architecture designed to handle flash-sale traffic without overselling. Implemented <strong>Distributed Locking</strong> (Redis Mutex) to prevent race conditions during 50+ req/sec bursts. Fully provisioned via <strong>Terraform</strong> (IaC) and monitored via a custom Streamlit dashboard.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Terraform</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Redis</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">AWS SQS</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Python</span>
-                    </div>
-                    <div class="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
-                        <a href="https://github.com/Tannishaa/flux-order" target="_blank" class="text-sm text-green-400 hover:text-white transition-colors font-semibold">View System Design</a>
-                    </div>
-                </div>
-
-                <div class="awesome-card rounded-2xl p-6 border-t-2 border-purple-500 flex flex-col group">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs font-bold bg-white/5 text-gray-400 px-2 py-1 rounded">Serverless API</span>
-                        </div>
-                        <div class="text-purple-500 text-xs font-bold">AWS Lambda</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Vibe-Check Engine</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow">
-                        Cost-optimized sentiment analysis engine achieving <strong>$0 inference costs</strong> via logic-based filtering. Features an automated "Crisis Trigger" that flags negative feedback loops via SNS in under 2 seconds.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">API Gateway</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Lambda</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">SNS</span>
-                    </div>
-                    <div class="pt-4 border-t border-white/5">
-                        <a href="https://github.com/Tannishaa/vibe-check" target="_blank" class="text-sm text-purple-400 hover:text-white transition-colors">View on GitHub</a>
-                    </div>
-                </div>
-
-                <div class="awesome-card rounded-2xl p-6 border-t-2 border-teal-500 flex flex-col group">
-    <div class="flex justify-between items-start mb-4">
-        <div class="flex items-center space-x-2">
-            <span class="text-xs font-bold bg-white/5 text-gray-400 px-2 py-1 rounded">Serverless</span>
-        </div>
-        <div class="text-teal-500 text-xs font-bold">AI & Security</div>
-    </div>
-    
-    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">
-        Bill-E: AI Risk Engine
-    </h3>
-    
-    <p class="text-gray-400 text-sm mb-6 flex-grow">
-        Event-driven fraud detection system. Uses <strong>Computer Vision (OCR)</strong> to read receipts and a <strong>Heuristic Risk Engine</strong> to flag anomalies (e.g., "Casino") in real-time, triggering instant SNS alerts.
-    </p>
-    
-    <div class="flex flex-wrap gap-2 mb-6">
-        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Terraform</span>
-        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">AWS Lambda</span>
-        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Computer Vision</span>
-    </div>
-    
-    <div class="pt-4 border-t border-white/5 flex gap-4">
-        <a href="https://github.com/Tannishaa/bill-e-audit" target="_blank" class="text-sm text-teal-400 hover:text-white transition-colors flex items-center gap-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
-            GitHub
-        </a>
-        <a href="https://bill-e-audit.streamlit.app" target="_blank" class="text-sm text-teal-400 hover:text-white transition-colors flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            Live Demo
-            (access code= admin123)
-        </a>
-    </div>
-</div>
-                <div class="awesome-card rounded-2xl p-6 border-t-2 border-orange-500 flex flex-col group md:col-span-2 lg:col-span-2">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs font-bold bg-white/5 text-gray-400 px-2 py-1 rounded">System Tool</span>
-                        </div>
-                        <div class="text-orange-500 text-xs font-bold">Automation</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors">Cloud Vault Daemon</h3>
-                    <p class="text-gray-400 text-sm mb-6">
-                        Multi-threaded background service that replicates local filesystem events to AWS S3 in real-time. Built with <strong>Watchdog</strong> for file system monitoring and automated Lifecycle Policies for cost-efficient storage tiering.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Python Threads</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">S3</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-500 border border-white/10 px-2 py-1 rounded-full">Watchdog</span>
-                    </div>
-                    <div class="pt-4 border-t border-white/5">
-                        <a href="https://github.com/Tannishaa/winter-arc-tools" target="_blank" class="text-sm text-orange-400 hover:text-white transition-colors">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="journey" class="py-20 fade-in-up">
-            <h2 class="text-center text-3xl font-bold text-white mb-12">My Journey</h2>
-            <div class="max-w-2xl mx-auto relative border-l border-white/10 ml-6 md:ml-auto">
                 
-                <div class="mb-8 ml-6 relative">
-                    <div class="absolute -left-[31px] top-2 w-4 h-4 rounded-full bg-[#0a0a1a] border-2 border-purple-500"></div>
-                    <div class="awesome-card p-5 rounded-lg border border-white/5 hover:border-purple-500/30 transition-colors">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-                            <h3 class="text-lg text-white font-bold">BCA (Final Year)</h3>
-                            <span class="text-xs text-purple-400 font-mono">2023 — 2026</span>
+                <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-mono text-xs uppercase tracking-widest pb-1 border-b border-transparent hover:border-white">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    LinkedIn
+                </a>
+
+                <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-mono text-xs uppercase tracking-widest pb-1 border-b border-transparent hover:border-white">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+            </div>
+        </section>
+
+        <section id="about" class="py-12 fade-in-up">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="glass-panel overflow-hidden">
+                    <div class="terminal-header">
+                        <div class="terminal-dot bg-[#ff5f56]"></div>
+                        <div class="terminal-dot bg-[#ffbd2e]"></div>
+                        <div class="terminal-dot bg-[#27c93f]"></div>
+                        <div class="ml-3 text-xs font-mono text-gray-500">tanisha@server: ~/portfolio</div>
+                    </div>
+
+                    <div class="p-8 md:p-12">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                            <div class="md:col-span-8">
+                                <div class="flex items-center gap-3 mb-6">
+                                    <span class="text-green-400 font-mono text-xl">></span>
+                                    <h3 class="text-xl md:text-2xl font-mono text-purple-400 tracking-tight">./fetch_background_data.sh</h3>
+                                </div>
+                                
+                                <div class="text-base text-gray-300 leading-relaxed font-mono"> 
+                                    <p class="font-bold text-white mb-6">I am a final-year BCA student at Banasthali Vidyapith with a deep interest in the "hidden" parts of the internet—the servers, databases, and logic that keep it all running.</p>
+                                    
+                                    <p class="mb-6">Over the last year, I validated my architecture knowledge by earning my AWS Cloud Practitioner certification, and honed my communication skills as a Workshop Lead for my university's national level tech fest, Mayukh.</p>
+                                    
+                                    <p class="inline">Now, I am stripping things back to basics. I am currently in a self-imposed engineering sprint, focusing entirely on mastering core Data Structures in Python and building out the backend architecture for my team's AI-driven final year project.</p>
+                                    
+                                    <span class="animate-pulse bg-white w-2 h-5 inline-block align-middle ml-1 mb-1"></span>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-4 space-y-8 pt-2 md:pt-1 border-t md:border-t-0 md:border-l border-white/5 md:pl-8">
+                                <div>
+                                    <h4 class="text-[10px] font-mono text-purple-400 uppercase tracking-widest mb-1">Status</h4>
+                                    <p class="text-white text-sm font-mono">Building Sentinel AI</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-[10px] font-mono text-teal-400 uppercase tracking-widest mb-1">Education</h4>
+                                    <p class="text-white text-sm font-mono">Banasthali Vidyapith</p>
+                                    <p class="text-xs text-gray-400 font-mono mt-1">8.15 CGPA</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-[10px] font-mono text-pink-400 uppercase tracking-widest mb-1">Location</h4>
+                                    <p class="text-white text-sm font-mono">Rajasthan, India</p>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-gray-400 text-sm">Banasthali Vidyapith • 8.0 CGPA</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="mb-8 ml-6 relative">
-                    <div class="absolute -left-[31px] top-2 w-4 h-4 rounded-full bg-[#0a0a1a] border-2 border-orange-500"></div>
-                    <div class="awesome-card p-5 rounded-lg border border-white/5 hover:border-orange-500/30 transition-colors">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-                            <h3 class="text-lg text-white font-bold">AWS Certified Cloud Practitioner</h3>
-                            <span class="text-xs text-orange-400 font-mono">2025</span>
-                        </div>
-                        <p class="text-gray-400 text-sm">Validated core cloud knowledge & architecture.</p>
-                    </div>
+        <section id="tech-stack" class="py-24 fade-in-up border-t border-white/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-12">
+                    <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Technical Arsenal</h2>
+                    <h3 class="text-3xl font-medium text-white tracking-tight">The tools I use to build.</h3>
                 </div>
 
-                <div class="mb-8 ml-6 relative">
-                    <div class="absolute -left-[31px] top-2 w-4 h-4 rounded-full bg-[#0a0a1a] border-2 border-teal-500"></div>
-                    <div class="awesome-card p-5 rounded-lg border border-white/5 hover:border-teal-500/30 transition-colors">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-                            <h3 class="text-lg text-white font-bold">Leadership (Mayukh Techfest)</h3>
-                            <span class="text-xs text-teal-400 font-mono">2025</span>
+                <div class="space-y-10">
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8 border-l-2 border-white/10 pl-6 py-2">
+                        <span class="text-white font-semibold w-40 tracking-wide text-lg pt-1">Cloud & Infra</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-orange-500/50 hover:bg-white/5 transition-all">
+    <img src="https://cdn.simpleicons.org/amazonaws/FF9900" class="w-5 h-5" alt="AWS">
+    AWS (Certified)
+</span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/terraform/terraform-original.svg" class="w-4 h-4" alt="Terraform">
+                                Terraform
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" class="w-5 h-5" alt="Docker">
+                                Docker
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg" class="w-4 h-4" alt="Redis">
+                                Redis
+                            </span>
                         </div>
-                        <p class="text-gray-400 text-sm">Sub-Core Member • Organized technical events & workshops.</p>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8 border-l-2 border-white/10 pl-6 py-2">
+                        <span class="text-white font-semibold w-40 tracking-wide text-lg pt-1">Backend & Logic</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" class="w-4 h-4" alt="Python">
+                                Python
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#4053D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                                </svg>
+                                DynamoDB
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" class="w-4 h-4" alt="Java">
+                                Java
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <span class="text-white font-bold font-mono text-sm">{ }</span>
+                                REST APIs
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8 border-l-2 border-white/10 pl-6 py-2">
+                        <span class="text-white font-semibold w-40 tracking-wide text-lg pt-1">Frontend & Tools</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" class="w-4 h-4 invert opacity-80" alt="Next.js">
+                                Next.js
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" class="w-4 h-4" alt="Git">
+                                Git / GitHub
+                            </span>
+                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg" class="w-4 h-4" alt="Linux">
+                                Linux
+                            </span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="ml-6 relative">
-                    <div class="absolute -left-[31px] top-2 w-4 h-4">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-[#0a0a1a]"></span>
+            </div>
+        </section>
+        <section id="projects" class="py-24 fade-in-up border-t border-white/5">
+            <div class="max-w-4xl mx-auto">
+                
+                <div class="flex justify-between items-end mb-16">
+                    <div>
+                        <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Proof of Work</h2>
+                        <h3 class="text-3xl font-medium text-white tracking-tight">Featured Projects</h3>
                     </div>
-                    <div class="awesome-card p-5 rounded-lg border border-green-500/30 bg-green-500/5">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-                            <h3 class="text-lg text-white font-bold"><span class="text-green-400 font-bold">Open for roles.</span></h3>
-                            <span class="text-xs text-green-400 font-mono">Present</span>
+                    <a href="https://github.com/Tannishaa" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors pb-1 border-b border-gray-700 hover:border-white">View GitHub</a>
+                </div>
+
+                <div class="space-y-12">
+                    
+                    <div class="glass-panel p-8 premium-hover cursor-pointer">
+                        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
+                            <h4 class="text-2xl font-medium text-white">Sentinel: AI-Driven NIDS</h4>
+                           <span class="text-[10px] font-mono mt-2 md:mt-0 uppercase tracking-widest px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">Final Year Project</span>
                         </div>
-                        <p class="text-gray-400 text-sm">
-                            Ready to develop high-concurrency backend systems. 
+                        <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
+                            A team project building an AI-driven Network Intrusion Detection System. I am responsible for the core <strong>Python backend</strong>—specifically writing the logic that analyzes network packets in real-time to flag security threats before they escalate.
+                        </p>
+                        <div class="flex items-center gap-4 text-sm font-mono text-gray-500 mb-6">
+                            <span>Python</span> • <span>Scapy</span> • <span>FastAPI</span> • <span>Machine Learning</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-8 premium-hover cursor-pointer">
+                        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
+                            <h4 class="text-2xl font-medium text-white">Flux-Order: Ticketing Engine</h4>
+                            <span class="text-[10px] font-mono mt-2 md:mt-0 uppercase tracking-widest px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">Cloud Architecture</span>
+                        </div>
+                        <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
+                            I wanted to understand how applications survive flash sales. I built a ticketing backend and used <strong>Redis Distributed Locking</strong> to solve a classic race condition: preventing two users from buying the exact same ticket at the exact same millisecond. Automated the AWS infrastructure using Terraform.
+                        </p>
+                        <div class="flex items-center gap-4 text-sm font-mono text-gray-500 mb-6">
+                            <span>Next.js</span> • <span>Terraform</span> • <span>Redis</span> • <span>AWS SQS</span>
+                        </div>
+                        <div class="flex gap-6">
+                            <a href="https://github.com/Tannishaa/flux-order" target="_blank" class="text-sm text-white hover:text-green-400 transition-colors flex items-center gap-2">
+                                <span>Source Code</span> <span class="text-lg">↗</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-8 premium-hover cursor-pointer">
+                        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
+                            <h4 class="text-2xl font-medium text-white">Bill-E: Serverless Risk Engine</h4>
+                           <span class="text-[10px] font-mono mt-2 md:mt-0 uppercase tracking-widest px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">Event-Driven AWS</span>
+                        </div>
+                        <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
+                            An exploration into serverless computing and cost optimization. This system uses an event-driven pipeline (S3 triggering Lambda) to run OCR on receipts and flag fraudulent anomalies. The best part? The decoupled architecture means it costs $0 to run when idle.
+                        </p>
+                        <div class="flex flex-wrap items-center gap-4 text-sm font-mono text-gray-500 mb-6">
+                            <span>AWS Lambda</span> • <span>S3</span> • <span>SNS</span> • <span>Python</span>
+                        </div>
+                        <div class="flex gap-6">
+                            <a href="https://github.com/Tannishaa/bill-e-audit" target="_blank" class="text-sm text-white hover:text-purple-400 transition-colors flex items-center gap-2">
+                                <span>GitHub</span> <span class="text-lg">↗</span>
+                            </a>
+                            <a href="https://bill-e-audit.streamlit.app" target="_blank" class="text-sm text-white hover:text-purple-400 transition-colors flex items-center gap-2">
+                                <span>Live Demo</span> <span class="text-lg">↗</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-24 fade-in-up border-t border-white/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-16">
+                    <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Beyond the Editor</h2>
+                    <h3 class="text-3xl font-medium text-white tracking-tight">Experience & Leadership</h3>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-baseline md:justify-between border-l-2 border-purple-500/50 pl-6 hover:border-purple-400 transition-colors mb-12">
+                    <div class="max-w-xl">
+                        <h4 class="text-xl font-medium text-white mb-1">Workshop Lead (Core Team)</h4>
+                        <p class="text-sm text-purple-400 font-mono mb-4">Mayukh — National Level Tech Fest</p>
+                        
+                        <p class="text-gray-400 text-base leading-relaxed mb-4">
+                            Successfully led the end-to-end logistics for technical workshops in the 2026 edition after being promoted from the 2025 sub-core team. Managed speaker relations, resource allocation, and mentored a sub-core team to deliver high-impact sessions for a national audience.
+                        </p>
+                        
+                        <div class="flex items-center gap-3 text-[10px] font-mono">
+                            <span class="border border-purple-500/30 px-2 py-1 bg-purple-500/10 text-purple-300">2026: Core Lead</span>
+                            <span class="border border-white/10 px-2 py-1 bg-black/20 text-gray-400">2025: Sub-Core</span>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono mt-4 md:mt-0 uppercase tracking-widest text-right">
+                        Jan 2025 – Mar 2026<br>
+                        <span class="text-[10px] opacity-50 block mt-1">(Seasonal)</span>
+                    </span>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-baseline md:justify-between border-l-2 border-purple-500/50 pl-6 hover:border-purple-400 transition-colors mb-12">
+                    <div class="max-w-xl">
+                        <h4 class="text-xl font-medium text-white mb-1">AWS Certified Cloud Practitioner</h4>
+                        <p class="text-sm text-purple-400 font-mono mb-4">Amazon Web Services</p>
+                        <p class="text-gray-400 text-base leading-relaxed">
+                            Validated my foundational understanding of cloud concepts, security, and architecture. Taking this certification was the stepping stone that bridged the gap between my traditional college syllabus and real-world infrastructure.
                         </p>
                     </div>
+                    <span class="text-xs text-gray-500 font-mono mt-4 md:mt-0 uppercase tracking-widest">Achieved 2025</span>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-baseline md:justify-between border-l-2 border-purple-500/50 pl-6 hover:border-purple-400 transition-colors">
+                    <div class="max-w-xl">
+                        <h4 class="text-xl font-medium text-white mb-1">Bachelor of Computer Applications</h4>
+                        <p class="text-sm text-purple-400 font-mono mb-4">Banasthali Vidyapith</p>
+                        <p class="text-gray-400 text-base leading-relaxed">
+                            Final-year student maintaining an 8.15 CGPA. Built a strong foundation in C, Java, and core computing principles before pivoting my focus heavily toward Python and cloud-native backend development.
+                        </p>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono mt-4 md:mt-0 uppercase tracking-widest">Graduating May 2026</span>
                 </div>
             </div>
         </section>
 
-        <section class="py-10 fade-in-up">
-            <div class="max-w-4xl mx-auto px-4">
-                <div class="awesome-card rounded-2xl p-8 border border-white/10 bg-[#0a0a1a]">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Code Frequency</h3>
-                            <p class="text-gray-400 text-sm">My GitHub contributions over the last year.</p>
-                        </div>
-                        <div class="text-purple-400">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        </div>
+        <section class="py-24 fade-in-up border-t border-white/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Consistency</h2>
+                        <h3 class="text-3xl font-medium text-white tracking-tight">Code Activity.</h3>
                     </div>
+                    <p class="text-sm text-gray-500 font-mono">Tracking daily logic & backend commits</p>
+                </div>
+                
+                <div class="w-full overflow-hidden opacity-80 hover:opacity-100 transition-all duration-500">
+                    <img src="https://ghchart.rshah.org/7000df/Tannishaa" alt="Tanisha's Github Chart" class="w-full h-auto" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-32 fade-in-up border-t border-white/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="max-w-2xl">
+                    <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">What's Next?</h2>
+                    <h3 class="text-5xl md:text-6xl font-medium text-white tracking-tight mb-6">Let's build something.</h3>
                     
-                    <div class="w-full overflow-hidden rounded-lg opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="https://ghchart.rshah.org/7000df/Tannishaa" alt="Tanisha's Github Chart" class="w-full">
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-12">
+                        I'm actively looking for full-time backend or cloud roles starting after I graduate in May 2026. Whether you have an open position, want to talk about AWS architecture, or just want to say hi-my inbox is open.
+                    </p>
 
-        <section id="contact" class="py-20 text-center fade-in-up">
-            <div class="awesome-card max-w-2xl mx-auto rounded-3xl p-10 border border-purple-500/20 bg-gradient-to-b from-purple-900/10 to-transparent">
-                <h2 class="text-4xl font-bold text-white mb-6">Ready to collaborate?</h2>
-                <p class="text-gray-400 mb-8">
-                    I'm currently looking for internships and full-time roles. If you have an exciting opportunity or just want to discuss Cloud Tech, my inbox is open.
-                </p>
-                <div class="flex justify-center space-x-4">
-                    <a href="mailto:tanisha17016@gmail.com?subject=Inquiry%20from%20Portfolio&body=Hi%20Tanisha,%20I%20saw%20your%20portfolio..." class="bg-white text-black hover:bg-gray-200 px-6 py-3 rounded-full font-bold transition-colors">
-                        Email Me
-                    </a>
-                    <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="bg-transparent border border-white/20 text-white hover:bg-white/10 px-6 py-3 rounded-full font-bold transition-colors">
-                        LinkedIn
-                    </a>
+                    <div class="flex flex-wrap items-center gap-8 font-mono text-sm">
+                        <a href="mailto:tanisha17016@gmail.com?subject=Hi%20Tanisha!" class="text-white hover:text-purple-400 transition-colors flex items-center gap-2 pb-1 border-b border-transparent hover:border-purple-400">
+                            <span>Send an Email</span> <span class="text-lg">↗</span>
+                        </a>
+                        <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 pb-1 border-b border-transparent hover:border-white">
+                            <span>LinkedIn</span> <span class="text-lg">↗</span>
+                        </a>
+                        <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 pb-1 border-b border-transparent hover:border-white">
+                            <span>GitHub</span> <span class="text-lg">↗</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="py-8 text-center text-gray-600 text-sm border-t border-white/5">
-        <p>Built with <span class="text-purple-500">♥</span> by Tanisha.</p>
+    <footer class="py-8 border-t border-white/5 mt-auto">
+        <div class="max-w-4xl mx-auto px-4 md:px-0 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-gray-600">
+            <p>© 2026 Tanisha. All rights reserved.</p>
+        </div>
     </footer>
+</div>
 
-    <script>
-    // --- STAR BACKGROUND ENGINE ---
-    (function() {
-        const canvas = document.getElementById('star-canvas');
-        if (!canvas) return; // Safety check
+<script>
+    // --- 1. BOOT SEQUENCE ---
+    const bootLines = [
+        "Initializing AWS Environment...",
+        "Establishing secure connection to ap-south-1...",
+        "Loading Tanisha_Profile.sys...",
+        "Fetching Sentinel AI-NIDS status: [ONLINE]",
+        "System ready. Welcome, Guest."
+    ];
+    const bootContainer = document.getElementById('boot-text');
+    const bootScreen = document.getElementById('boot-screen');
+    const mainWrapper = document.getElementById('main-wrapper');
+    let delay = 0;
 
-        const ctx = canvas.getContext('2d');
-        let stars = [];
-        const numStars = 150; // Reduced slightly for performance
-        let width, height;
+    bootLines.forEach((line) => {
+        setTimeout(() => {
+            const p = document.createElement('p');
+            p.textContent = `> ${line}`;
+            bootContainer.appendChild(p);
+        }, delay);
+        delay += 300; 
+    });
 
-        // Force canvas to match window size exactly
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
+    setTimeout(() => {
+        if(bootScreen && mainWrapper) {
+            bootScreen.classList.add('boot-hidden');
+            mainWrapper.classList.add('loaded');
+            setTimeout(() => bootScreen.style.display = 'none', 800);
         }
+    }, delay + 400);
 
-        class Star {
-            constructor() { this.reset(true); }
-            
-            reset(initial = false) {
-                this.x = Math.random() * width;
-                this.y = initial ? Math.random() * height : height; // Start scattered, then spawn at bottom
-               this.size = Math.random() * 1.2 + 0.1;
-                this.speed = Math.random() * 0.5 + 0.2; // Faster speed
-                this.opacity = Math.random() * 0.8 + 0.2; // Min opacity 0.2 (no invisible stars)
-            }
-
-            update() {
-                this.y -= this.speed;
-                if (this.y < 0) this.reset(false);
-            }
-
-            draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function init() {
-            resize();
-            stars = [];
-            for (let i = 0; i < numStars; i++) {
-                stars.push(new Star());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            stars.forEach(star => {
-                star.update();
-                star.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-
-        // --- THE FIX: Aggressive Initialization ---
-        // 1. Start immediately
-        init();
-        animate();
-
-        // 2. Re-init when the window is officially "loaded"
-        window.addEventListener('load', init);
-
-        // 3. Re-init on resize
-        window.addEventListener('resize', () => {
-            resize();
-            init(); // Re-scatter stars on resize
+    // --- 2. FLASHLIGHT EFFECT TRACKER ---
+    const flashlight = document.getElementById('flashlight');
+    if(flashlight) {
+        document.addEventListener('mousemove', (e) => {
+            flashlight.style.setProperty('--x', `${e.clientX}px`);
+            flashlight.style.setProperty('--y', `${e.clientY}px`);
         });
+    }
 
-        // 4. Polling Fallback: Check every 500ms for the first 2 seconds
-        // This fixes cases where window size reports '0' initially
-        let attempts = 0;
-        const checkInterval = setInterval(() => {
-            if (window.innerWidth > 0 && width !== window.innerWidth) {
-                init();
-            }
-            attempts++;
-            if (attempts > 4) clearInterval(checkInterval);
-        }, 500);
-
-    })(); // Self-executing closure to keep scope clean
-
-    // --- UI INTERACTION LOGIC (Nav, Typing, etc.) ---
+    // --- 3. SCROLL & MENU ANIMATIONS (Optimized for speed) ---
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // Typing Animation
-        const typeTextElement = document.querySelector('.type-text');
-        const textArray = ["An AWS Certified Cloud Practitioner.", "A Python & Backend Engineer.", "Building Scalable Cloud Systems."];
-        let textArrayIndex = 0, charIndex = 0;
-
-        function type() {
-            if (charIndex < textArray[textArrayIndex].length) {
-                typeTextElement.textContent += textArray[textArrayIndex].charAt(charIndex);
-                charIndex++;
-                setTimeout(type, 100);
-            } else { setTimeout(erase, 2000); }
-        }
-        function erase() {
-            if (charIndex > 0) {
-                typeTextElement.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
-                charIndex--;
-                setTimeout(erase, 50);
-            } else {
-                textArrayIndex = (textArrayIndex + 1) % textArray.length;
-                setTimeout(type, 500);
-            }
-        }
-        if(typeTextElement) type();
-
-        // Mobile Menu
         const mobileBtn = document.getElementById('mobile-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         if(mobileBtn) {
@@ -740,21 +591,18 @@
             });
         }
 
-        // Card Glow
-        document.querySelectorAll('.awesome-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-            });
-        });
-        
-        // Scroll Animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if(entry.isIntersecting) entry.target.classList.add('visible');
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
             });
+        }, { 
+            threshold: 0, 
+            rootMargin: "0px 0px 250px 0px" /* <-- Triggers the load before you even see it! */
         });
+
         document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
     });
 </script>
