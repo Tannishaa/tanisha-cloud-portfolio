@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The $0 Architecture: Building a Serverless ETL Pipeline (and the Key I Leaked Along the Way) – Tanisha</title>
+    <meta name="description" content="Everyone says serverless is cheap. What nobody tells you is that cheap is not a default state — and getting there usually means breaking a few things first.">
+    <meta property="og:type"        content="article">
+    <meta property="og:title"       content="The $0 Architecture: Building a Serverless ETL Pipeline (and the Key I Leaked Along the Way)">
+    <meta property="og:description" content="Everyone says serverless is cheap. What nobody tells you is that cheap is not a default state — and getting there usually means breaking a few things first.">
+    <meta property="og:url"         content="https://tanisha.dev/serverless-zero-cost.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;600;700&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .post-wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 110px clamp(1.5rem, 5vw, 3.5rem) 100px;
+        }
+        .post-back {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.68rem; font-weight: 500;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--muted); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-bottom: 3rem; transition: color 0.2s;
+        }
+        .post-back:hover { color: var(--cream); }
+        .post-tag {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.64rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--rust); margin-bottom: 1.1rem;
+        }
+        .post-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 400; letter-spacing: -0.022em; line-height: 1.1;
+            color: var(--cream); margin-bottom: 1.2rem;
+        }
+        .post-byline {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.72rem; letter-spacing: 0.08em;
+            color: var(--muted);
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 2.8rem;
+            padding-bottom: 2.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .post-byline .sep { opacity: 0.3; }
+
+        .post-body {
+            font-size: 1.05rem; font-weight: 300;
+            line-height: 1.9; color: var(--dimmed);
+        }
+        .post-body p { margin-bottom: 1.6rem; }
+        .post-body p:last-child { margin-bottom: 0; }
+        .post-body h2 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.4rem, 3vw, 1.75rem);
+            font-weight: 400; letter-spacing: -0.015em;
+            color: var(--cream); margin: 3rem 0 1.2rem;
+        }
+        .post-body strong { color: var(--cream); font-weight: 500; }
+        .post-body code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: rgba(240,236,224,0.07);
+            border: 1px solid var(--border);
+            padding: 2px 7px; border-radius: 3px;
+            color: var(--cream); white-space: nowrap;
+        }
+        .post-body pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px; padding: 1.5rem;
+            overflow-x: auto; margin: 1.6rem 0;
+        }
+        .post-body pre code {
+            background: none; border: none; padding: 0;
+            font-size: 0.88rem; line-height: 1.75;
+            color: var(--dimmed); white-space: pre;
+        }
+
+        /* pipeline flow */
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1.8rem 0;
+        }
+        .pipeline-step {
+            background: var(--surface);
+            padding: 1rem 1.1rem;
+        }
+        .pipeline-step .p-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--cream); margin-bottom: 5px;
+        }
+        .pipeline-step .p-desc {
+            font-size: 0.8rem; font-weight: 300;
+            line-height: 1.5; color: var(--muted);
+        }
+        @media (max-width: 560px) {
+            .pipeline { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* result box */
+        .result-box {
+            background: rgba(46,180,100,0.07);
+            border: 1px solid rgba(46,180,100,0.25);
+            border-radius: 6px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.8rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem; color: #4eca7f;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .result-box .result-icon { font-size: 1.1rem; opacity: 0.7; flex-shrink: 0; }
+
+        /* security callout — red-toned */
+        .security-box {
+            background: rgba(220,50,50,0.07);
+            border: 1px solid rgba(220,50,50,0.22);
+            border-radius: 6px;
+            padding: 1.3rem 1.5rem;
+            margin: 1.8rem 0;
+        }
+        .security-box .s-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: #e05a5a; margin-bottom: 0.7rem;
+        }
+        .security-box p {
+            font-size: 0.93rem; font-weight: 300;
+            line-height: 1.75; color: var(--dimmed);
+            margin: 0;
+        }
+
+        /* access design box — blue-toned */
+        .access-box {
+            background: rgba(80,130,220,0.07);
+            border: 1px solid rgba(80,130,220,0.2);
+            border-radius: 6px;
+            padding: 1.3rem 1.5rem;
+            margin: 1.8rem 0;
+        }
+        .access-box .a-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: #7aaaee; margin-bottom: 0.7rem;
+        }
+        .access-box p {
+            font-size: 0.93rem; font-weight: 300;
+            line-height: 1.75; color: var(--dimmed);
+            margin: 0;
+        }
+
+        /* deployment log */
+        .deploy-log { margin: 1.8rem 0; }
+        .deploy-entry {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 1rem;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .deploy-entry:first-child { border-top: 1px solid var(--border); }
+        .deploy-date {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.66rem; font-weight: 600;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--muted); padding-top: 2px;
+        }
+        .deploy-note { color: var(--dimmed); line-height: 1.65; }
+        .deploy-note code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.82em;
+            background: rgba(240,236,224,0.07);
+            border: 1px solid var(--border);
+            padding: 1px 6px; border-radius: 3px;
+            color: var(--cream);
+        }
+        @media (max-width: 500px) {
+            .deploy-entry { grid-template-columns: 1fr; gap: 0.3rem; }
+        }
+
+        /* post footer */
+        .post-footer {
+            margin-top: 5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 1.5rem;
+        }
+        .post-footer-left p {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+        }
+        .post-footer-left a {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem; font-weight: 400;
+            color: var(--cream); text-decoration: none; transition: color 0.2s;
+        }
+        .post-footer-left a:hover { color: var(--rust); }
+        .post-footer-prev { text-align: right; }
+        .post-footer-prev p { text-align: right; }
+    </style>
+</head>
+<body>
+<div id="site" class="revealed">
+
+    <header id="main-header">
+        <a href="index.html" class="nav-logo">Tanisha</a>
+        <ul class="nav-links">
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#projects">Projects</a></li>
+            <li><a href="index.html#writing">Writing</a></li>
+        </ul>
+        <div style="display:flex;align-items:center;gap:1.2rem">
+            <a href="index.html#contact" class="nav-hire">Hire me</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="post-wrap">
+
+            <a href="index.html#writing" class="post-back">← All posts</a>
+
+            <p class="post-tag">Cloud Engineering</p>
+            <h1 class="post-title">The $0 Architecture: Building a Serverless ETL Pipeline (and the Key I Leaked Along the Way)</h1>
+            <div class="post-byline">
+                <span>Tanisha</span>
+                <span class="sep">·</span>
+                <span>Dec 2025</span>
+                <span class="sep">·</span>
+                <span>5 min read</span>
+            </div>
+
+            <div class="post-body">
+
+                <p>Everyone says serverless is cheap. Spin up a Lambda, process your data, scale to zero. What nobody tells you is that "cheap" is not a default state. It is an engineered outcome, and getting there usually means breaking a few things first.</p>
+
+                <p>Building Bill-E — an automated financial ETL pipeline — taught me that the hard way. Looking back at the commit history, the path to a hardened, zero-idle-cost architecture ran straight through a monolithic local script, a dependency nightmare, and one genuinely stressful security incident.</p>
+
+                <h2>The V1 monolith and why it had to go</h2>
+
+                <p>Bill-E did not start in the cloud. It started as a single Python script running on my machine. It worked in isolation, but local scripts do not scale, and they cannot back a web dashboard. The real problem showed up when I thought through what happens if a user uploads a massive financial CSV: a synchronous server would block the main thread, keep the user waiting, and rack up uptime costs the entire time.</p>
+
+                <p>So I scrapped V1 entirely and re-architected it as an event-driven serverless pipeline. The new flow looks like this:</p>
+
+                <div class="pipeline">
+                    <div class="pipeline-step">
+                        <div class="p-label">S3 Bucket</div>
+                        <div class="p-desc">User drops a CSV file</div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="p-label">SQS Queue</div>
+                        <div class="p-desc">S3 event queued for processing</div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="p-label">Lambda</div>
+                        <div class="p-desc">Runs the ETL script, then exits</div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="p-label">DynamoDB</div>
+                        <div class="p-desc">Transformed data written and stored</div>
+                    </div>
+                </div>
+
+                <p>No persistent server. No idle capacity. If no file is uploaded for a week, the AWS bill for that week is exactly $0.00. The Lambda spins up, does its job, and disappears.</p>
+
+                <div class="result-box">
+                    <span class="result-icon">$</span>
+                    <span>$0.00 AWS cost during idle periods, with no files uploaded and no Lambda invocations running</span>
+                </div>
+
+                <h2>The Christmas Eve security panic</h2>
+
+                <p>Before I could feel good about the new architecture, I learned a blunt lesson in cloud security. While rushing to test my AWS integration on December 24th, I pushed a commit containing hardcoded credentials directly to GitHub. Active AWS keys, sitting in a public repository.</p>
+
+                <div class="security-box">
+                    <div class="s-label">Security Incident</div>
+                    <p>Within minutes I deleted the commit, revoked the keys in the AWS Console, and rotated everything on the spot. I then spent the rest of the day refactoring the entire pipeline to pull secrets through environment variables only, with nothing sensitive ever touching source control.</p>
+                </div>
+
+                <p>The real lesson was not "be more careful before you push." That kind of promise does not hold under pressure. The lesson was to architect the project so that secrets are structurally impossible to commit in the first place. <strong>Environment variables enforced at the pipeline level, not left to memory.</strong></p>
+
+                <h2>The deployment grind</h2>
+
+                <p>Getting the backend working locally was one thing. Deploying the frontend to the cloud was a different fight entirely. Here is roughly how those last few days of December went:</p>
+
+                <div class="deploy-log">
+                    <div class="deploy-entry">
+                        <div class="deploy-date">Dec 30, attempt 1</div>
+                        <div class="deploy-note">Deployed the Streamlit dashboard. Build crashed immediately. Cloud environment had no dependency list to install from.</div>
+                    </div>
+                    <div class="deploy-entry">
+                        <div class="deploy-date">Dec 30, attempt 2</div>
+                        <div class="deploy-note">Pushed <code>fix: Added requirements.txt</code>. Still missing a backend dependency. Pushed the fix again.</div>
+                    </div>
+                    <div class="deploy-entry">
+                        <div class="deploy-date">Dec 31</div>
+                        <div class="deploy-note">Hit a state management wall. Streamlit is inherently static but the Lambda was processing data asynchronously. Engineered a polling loop so the dashboard updated in real time as the pipeline finished.</div>
+                    </div>
+                </div>
+
+                <p>The "it works on my machine" problem is not about the code being wrong. It is about the environment being different in ways you did not think to account for. Writing a requirements file feels tedious until you have deployed a broken build twice in the same afternoon.</p>
+
+                <h2>Locking it down</h2>
+
+                <p>Once the dashboard was live, I wanted to make it publicly accessible for my portfolio. The problem was that any visitor could trigger a Lambda invocation by uploading a file, which would cost real money and pollute my data. I spent the first week of January building a custom Role-Based Access Control system that split the app into two layers: a public read-only view and a locked upload layer that requires authentication.</p>
+
+                <div class="access-box">
+                    <div class="a-label">Access Design</div>
+                    <p>I also added a silent admin alert that pings me whenever someone logs into the upload layer. The public can explore the dashboard freely. Any actual write operations require credentials and notify me immediately.</p>
+                </div>
+
+                <h2>What it actually taught me</h2>
+
+                <p>Serverless is not just about skipping server management. It is a shift from paying for capacity to paying strictly for execution. That distinction matters a lot when you are building something that needs to be free to run but fast when it does.</p>
+
+                <p>More than any specific AWS service, building Bill-E taught me that real engineering does not follow a straight line. You write a monolith, realise it does not scale, tear it apart, leak a credential, fix the pipeline, fight a dependency, and eventually lock it all down. That is not a sign you are doing it wrong. That is just how production software gets made.</p>
+
+            </div>
+
+            <div class="post-footer">
+                <div class="post-footer-left post-footer-prev">
+                    <p>Previous post</p>
+                    <a href="redis-distributed-locks.html">← Why Redis Distributed Locks Actually Solve the Double-Booking Problem</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <hr class="divider">
+    <footer>
+        <div class="wrap footer-inner">
+            <p>© 2026 Tanisha</p>
+            <p>Cloud Engineer · Backend Developer</p>
+        </div>
+    </footer>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
