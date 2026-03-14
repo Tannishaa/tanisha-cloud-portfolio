@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Redis Distributed Locks Actually Solve the Double-Booking Problem – Tanisha</title>
+    <meta name="description" content="I built a ticketing engine and learned the hard way that optimistic locking isn't enough when two threads hit the same resource in the same millisecond.">
+    <meta property="og:type"        content="article">
+    <meta property="og:title"       content="Why Redis Distributed Locks Actually Solve the Double-Booking Problem">
+    <meta property="og:description" content="I built a ticketing engine and learned the hard way that optimistic locking isn't enough when two threads hit the same resource in the same millisecond.">
+    <meta property="og:url"         content="https://tanisha.dev/redis-distributed-locks.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;600;700&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── POST LAYOUT ── */
+        .post-wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 110px clamp(1.5rem, 5vw, 3.5rem) 100px;
+        }
+
+        .post-back {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.68rem; font-weight: 500;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--muted); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-bottom: 3rem;
+            transition: color 0.2s;
+        }
+        .post-back:hover { color: var(--cream); }
+
+        .post-tag {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.64rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--rust); margin-bottom: 1.1rem;
+        }
+
+        .post-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 400; letter-spacing: -0.022em; line-height: 1.1;
+            color: var(--cream); margin-bottom: 1.2rem;
+        }
+
+        .post-byline {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.72rem; letter-spacing: 0.08em;
+            color: var(--muted);
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 2.8rem;
+            padding-bottom: 2.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .post-byline .sep { opacity: 0.3; }
+
+        /* ── BODY TYPOGRAPHY ── */
+        .post-body {
+            font-size: 1.05rem; font-weight: 300;
+            line-height: 1.9; color: var(--dimmed);
+        }
+        .post-body p { margin-bottom: 1.6rem; }
+        .post-body p:last-child { margin-bottom: 0; }
+
+        .post-body h2 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.4rem, 3vw, 1.75rem);
+            font-weight: 400; letter-spacing: -0.015em;
+            color: var(--cream);
+            margin: 3rem 0 1.2rem;
+        }
+
+        .post-body strong { color: var(--cream); font-weight: 500; }
+
+        /* inline code */
+        .post-body code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: rgba(240,236,224,0.07);
+            border: 1px solid var(--border);
+            padding: 2px 7px; border-radius: 3px;
+            color: var(--cream);
+            white-space: nowrap;
+        }
+
+        /* code block */
+        .post-body pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.6rem 0;
+        }
+        .post-body pre code {
+            background: none; border: none; padding: 0;
+            font-size: 0.88rem; line-height: 1.75;
+            color: var(--dimmed); white-space: pre;
+        }
+
+        /* ── THREAD TABLE ── */
+        .thread-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.8rem 0;
+            font-size: 0.92rem;
+        }
+        .thread-table td {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            color: var(--dimmed);
+        }
+        .thread-table tr:first-child td { border-top-color: rgba(240,236,224,0.15); }
+        .thread-table td:first-child {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.68rem; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--muted); white-space: nowrap;
+            width: 110px;
+        }
+        .thread-table .bad { color: #e05a5a; }
+        .thread-table tr:nth-child(even) td { background: rgba(240,236,224,0.02); }
+
+        /* ── CALLOUT BOX ── */
+        .callout {
+            border-left: 2px solid var(--rust);
+            background: rgba(212,80,10,0.07);
+            padding: 1.2rem 1.5rem;
+            margin: 1.8rem 0;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+            line-height: 1.75;
+            color: var(--dimmed);
+        }
+
+        /* ── RESULT BOX ── */
+        .result-box {
+            background: rgba(46,180,100,0.07);
+            border: 1px solid rgba(46,180,100,0.25);
+            border-radius: 6px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.8rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #4eca7f;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .result-box .result-icon {
+            font-size: 1.1rem; opacity: 0.7; flex-shrink: 0;
+        }
+
+        /* ── BULLET LIST ── */
+        .post-body ul {
+            list-style: none;
+            padding: 0; margin: 1.4rem 0;
+        }
+        .post-body ul li {
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.75;
+        }
+        .post-body ul li:last-child { border-bottom: none; }
+        .post-body ul li::before {
+            content: '';
+            position: absolute; left: 0; top: 1.05rem;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--muted);
+        }
+
+        /* ── POST FOOTER ── */
+        .post-footer {
+            margin-top: 5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 1.5rem;
+        }
+        .post-footer-left p {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .post-footer-left a {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem; font-weight: 400;
+            color: var(--cream); text-decoration: none;
+            transition: color 0.2s;
+        }
+        .post-footer-left a:hover { color: var(--rust); }
+
+        @media (max-width: 600px) {
+            .thread-table { font-size: 0.82rem; }
+            .thread-table td:first-child { width: 80px; font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="site" class="revealed">
+
+    <header id="main-header">
+        <a href="index.html" class="nav-logo">Tanisha</a>
+        <ul class="nav-links">
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#projects">Projects</a></li>
+            <li><a href="index.html#writing">Writing</a></li>
+        </ul>
+        <div style="display:flex;align-items:center;gap:1.2rem">
+            <a href="index.html#contact" class="nav-hire">Hire me</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="post-wrap">
+
+            <a href="index.html#writing" class="post-back">← All posts</a>
+
+            <p class="post-tag">Distributed Systems</p>
+            <h1 class="post-title">Why Redis Distributed Locks Actually Solve the Double-Booking Problem</h1>
+            <div class="post-byline">
+                <span>Tanisha</span>
+                <span class="sep">·</span>
+                <span>                </span>
+                <span class="sep">·</span>
+                <span>5 min read</span>
+            </div>
+
+            <div class="post-body">
+
+                <p>When I started building Flux-Order, a high-concurrency ticketing system, the core requirement sounded almost embarrassingly simple: process flash-sale traffic without overselling a single ticket.</p>
+
+                <p>You have probably lived the other side of this problem. You click "Buy," the page loads for ten seconds, and somehow the show is still sold out by the time your cart loads. I wanted to build the backend that does not do that. What I did not expect was how many ways I would nearly break it before getting there.</p>
+
+                <h2>The race condition</h2>
+
+                <p>A standard REST API hitting a relational database was never going to handle flash-sale volume. The moment I started stress-testing my initial endpoints, I ran straight into the hardest problem in distributed systems: the race condition.</p>
+
+                <p>Picture two users, Alice and Bob, both clicking "Buy" on the very last ticket at the exact same millisecond.</p>
+
+                <table class="thread-table">
+                    <tr><td>Thread A</td><td>Checks the database. One ticket left.</td></tr>
+                    <tr><td>Thread B</td><td>Checks the database. One ticket left.</td></tr>
+                    <tr><td>Thread A</td><td>Decrements to zero. Alice's order confirmed.</td></tr>
+                    <tr><td>Thread B</td><td class="bad">Decrements to -1. Bob's order confirmed.</td></tr>
+                </table>
+
+                <p>You just sold a ticket that does not exist. My first attempt to fix this was optimistic locking, which checks a row version before writing. It looked clean in isolation. But the moment I ran Locust to simulate a realistic burst of concurrent buyers, it fell apart. Threads were colliding, failing, and looping in retries. Latency spiked. The system got slower under the exact conditions it needed to hold up. Optimistic locking is not a solution for a real flash sale. It is just a slower version of the same problem.</p>
+
+                <h2>The Redis mutex</h2>
+
+                <p>What I actually needed was a way to serialize access to a specific ticket before the primary database was ever touched. That is where a Redis Distributed Lock came in.</p>
+
+                <p>I implemented a Redis mutex using the <code>SET NX</code> command, which stands for Set if Not Exists. Here is what the flow looks like in practice:</p>
+
+                <ul>
+                    <li>When Alice tries to buy Ticket #42, the backend writes a unique lock key in Redis (<code>ticket:42</code>) with a TTL attached.</li>
+                    <li>Because Redis is single-threaded and runs entirely in memory, only one thread can successfully set that key. Alice gets it.</li>
+                    <li>Alice's transaction proceeds to the database to finalize the purchase.</li>
+                    <li>A millisecond later, Bob tries the same ticket. Redis rejects the <code>SET NX</code> call because the lock exists. His request fails immediately. No database hit, no retry loop, just a clean instant response.</li>
+                </ul>
+
+                <div class="callout">
+                    The TTL is the crucial safety net. If Alice's process crashes mid-transaction, the lock expires after a few seconds and the ticket returns to the available pool. Without it, the ticket sits permanently stuck in limbo.
+                </div>
+
+                <h2>Failing fast is a feature</h2>
+
+                <p>When I ran the Locust load tests again, hammering the API with 50+ concurrent requests per second on the same ticket, the result was clean.</p>
+
+                <div class="result-box">
+                    <span class="result-icon">{}</span>
+                    <span>0 double bookings across the entire load test run at 50+ requests per second</span>
+                </div>
+
+                <p>Building Flux-Order taught me that localhost is deceptive. Code that runs perfectly in a linear, single-threaded environment will behave completely differently when real traffic hits it in the cloud.</p>
+
+                <p>More importantly, it taught me that failing fast is a genuine feature. Keeping a user waiting ten seconds while threads stubbornly retry is far worse UX than rejecting them in 20 milliseconds. The Redis lock makes the failure instant, deterministic, and intentional.</p>
+
+            </div>
+
+            <div class="post-footer">
+                <div class="post-footer-left">
+                    <p>Next post</p>
+                    <a href="serverless-zero-cost.html">The $0 Architecture: How Event-Driven Serverless Achieves Idle-Cost Efficiency →</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <hr class="divider">
+    <footer>
+        <div class="wrap footer-inner">
+            <p>© 2026 Tanisha</p>
+            <p>Cloud Engineer · Backend Developer</p>
+        </div>
+    </footer>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
