@@ -1,294 +1,147 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <title>Tanisha – Cloud Engineer & Backend Developer</title>
+    <meta name="description" content="Portfolio of Tanisha, AWS Certified Cloud Practitioner and Backend Developer building serverless systems.">
 
-    <title>Tanisha | Cloud Engineer & Backend Developer</title>
-
-    <style>
-        :root { 
-            --bg-dark: #03050c; 
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --neon-purple: #a855f7; 
-        }
-
-        html { background-color: var(--bg-dark); }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: #e0e0e0;
-            overflow-x: hidden;
-            margin: 0;
-            position: relative;
-        }
-
-        main, header, footer {
-            position: relative;
-            z-index: 10; 
-        }
-
-        /* --- THE CLOUD AURORA --- */
-        .aurora-wrapper {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.6;
-        }
-        .aurora-blob {
-            position: absolute; border-radius: 50%; filter: blur(120px);
-            animation: drift 20s infinite ease-in-out alternate;
-        }
-        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(124, 58, 237, 0.3); } 
-        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: rgba(13, 148, 136, 0.2); animation-delay: -5s; } 
-        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: rgba(236, 72, 153, 0.15); animation-delay: -10s; } 
-
-        @keyframes drift {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(5%, 10%) scale(1.1); }
-            100% { transform: translate(-5%, -5%) scale(0.9); }
-        }
-
-        /* --- THE FLASHLIGHT GRID --- */
-        .flashlight-bg {
-            position: fixed; inset: 0; z-index: 1; pointer-events: none;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(350px circle at var(--x, 50vw) var(--y, 50vh), black 0%, transparent 100%);
-            -webkit-mask-image: radial-gradient(350px circle at var(--x, 50vw) var(--y, 50vh), black 0%, transparent 100%);
-        }
-
-        /* --- THE EDITORIAL GLASS BENTO --- */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            position: relative;
-        }
-
-        .glass-panel::before, .glass-panel::after {
-            content: '+';
-            position: absolute;
-            color: rgba(255, 255, 255, 0.15);
-            font-family: monospace;
-            font-size: 14px;
-            line-height: 1;
-            pointer-events: none;
-        }
-        .glass-panel::before { top: 20px; right: 20px; }
-        .glass-panel::after { bottom: 20px; left: 20px; }
-        nav.glass-panel::before, nav.glass-panel::after { display: none; }
-
-        /* --- HOVER --- */
-        .premium-hover { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .premium-hover:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px -10px rgba(168, 85, 247, 0.25); 
-            border-color: rgba(168, 85, 247, 0.4);
-        }
-
-        /* --- TERMINAL HEADER --- */
-        .terminal-header {
-            background: rgba(0,0,0,0.4); padding: 12px 16px; display: flex; align-items: center; gap: 8px; 
-            border-bottom: 1px solid var(--glass-border); 
-            border-top-left-radius: 24px; border-top-right-radius: 24px;
-        }
-        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-
-        /* --- SCROLL ANIMATIONS --- */
-        .fade-in-up { opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
-
-        /* --- THE LINUX BOOT SCREEN --- */
-        #boot-screen {
-            position: fixed; inset: 0; background-color: #000; z-index: 99999;
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem;
-            font-family: 'JetBrains Mono', monospace; color: #22c55e; font-size: 14px;
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .boot-hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
-        #boot-text p { margin: 2px 0; opacity: 0; animation: typeLine 0.1s forwards; }
-        @keyframes typeLine { to { opacity: 1; } }
-
-        .main-content { opacity: 0; transition: opacity 1.5s ease-in; }
-        .main-content.loaded { opacity: 1; }
-    </style>
-    
-    <noscript><style>html { visibility: visible; }</style></noscript>
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://tanisha.dev/">
+    <meta property="og:title"       content="Tanisha – Cloud Engineer & Backend Developer">
+    <meta property="og:description" content="AWS Certified Cloud Practitioner. Building serverless backends, distributed systems, and cloud infrastructure in Python.">
+    <meta property="og:image"       content="https://tanisha.dev/og-image.png">
+    <meta name="twitter:card"       content="summary_large_image">
+    <meta name="twitter:title"      content="Tanisha – Cloud Engineer & Backend Developer">
+    <meta name="twitter:description" content="AWS Certified Cloud Practitioner. Building serverless backends, distributed systems, and cloud infrastructure in Python.">
+    <meta name="twitter:image"      content="https://tanisha.dev/og-image.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                    mono: ['"JetBrains Mono"', 'monospace'],
-                }
-            }
-        }
-    }
-    </script>
-
-    <meta name="description" content="Portfolio of Tanisha, an AWS Certified Cloud Practitioner and Backend Developer building serverless systems.">
-    <meta property="og:title" content="Tanisha | Cloud Engineer">
-    <meta property="og:description" content="AWS Certified. Building high-availability serverless systems. View my projects.">
-    <meta property="og:type" content="website">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Syne:wght@400;500;600;700&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="antialiased">
+<body>
 
-<div id="boot-screen">
-    <div id="boot-text" class="max-w-3xl w-full"></div>
-    <div class="mt-2 animate-pulse w-2 h-4 bg-green-500"></div>
+<!-- CURTAIN -->
+<div id="curtain" aria-hidden="true">
+    <div class="c-line"><div class="c-name">Tanisha</div></div>
+    <div class="c-rule"></div>
+    <div class="c-line"><div class="c-sub">Cloud Engineer &amp; Backend Developer</div></div>
 </div>
 
-<div id="main-wrapper" class="main-content">
+<!-- SITE -->
+<div id="site">
 
-    <div class="aurora-wrapper">
-        <div class="aurora-blob blob-1"></div>
-        <div class="aurora-blob blob-2"></div>
-        <div class="aurora-blob blob-3"></div>
-    </div>
-    <div class="flashlight-bg" id="flashlight"></div>
-
-    <header class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-        <nav class="glass-panel !rounded-full px-6 py-3 flex items-center justify-between w-full max-w-4xl">
-            <a href="#" class="text-white font-semibold tracking-widest text-sm hover:text-purple-400 transition-colors">TANISHA</a>
-            
-            <div class="hidden md:flex items-center space-x-8 text-xs font-mono text-gray-400 uppercase tracking-widest">
-                <a href="#about" class="hover:text-white transition-colors">About</a>
-                <a href="#tech-stack" class="hover:text-white transition-colors">Stack</a>
-                <a href="#projects" class="hover:text-white transition-colors">Projects</a>
-                <a href="#experience" class="hover:text-white transition-colors">Experience</a>
-            </div>
-
-            <div class="hidden md:flex items-center space-x-5">
-                <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                </a>
-                <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                </a>
-                <a href="#contact" class="text-green-400 text-[10px] font-mono uppercase tracking-widest px-4 py-2 border border-green-500/30 !rounded-md bg-green-500/10 hover:bg-green-500 hover:text-white premium-hover transition-all duration-300 shadow-[0_0_10px_rgba(34,197,94,0.2)] hover:shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-                    [ Hire_Me ]
-                </a>
-            </div>
-
-            <button id="mobile-btn" class="md:hidden text-gray-400 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
-        </nav>
-        
-        <div id="mobile-menu" class="hidden fixed top-24 left-4 right-4 z-[60] rounded-xl border border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl p-6 flex-col space-y-6 md:hidden shadow-2xl">
-            <div class="flex flex-col space-y-4 text-sm font-mono uppercase tracking-widest text-gray-400">
-                <a href="#about" class="block hover:text-white transition-colors">About</a>
-                <a href="#tech-stack" class="block hover:text-white transition-colors">Tech Stack</a>
-                <a href="#projects" class="block hover:text-white transition-colors">Projects</a>
-                <a href="#experience" class="block hover:text-white transition-colors">Experience</a>
-                <a href="#contact" class="text-white pt-4 border-t border-white/10 w-fit">Contact</a>
-            </div>
-            
-            <div class="flex items-center space-x-6 pt-2">
-                <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors">
-                    <span class="sr-only">GitHub</span>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                </a>
-                <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors">
-                    <span class="sr-only">LinkedIn</span>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                </a>
-            </div>
+    <header id="main-header">
+        <a href="#" class="nav-logo">Tanisha</a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#stack">Stack</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#writing">Writing</a></li>
+        </ul>
+        <div style="display:flex;align-items:center;gap:1.2rem">
+            <a href="#contact" class="nav-hire">Hire me</a>
         </div>
+        <!-- aria-expanded toggled by JS -->
+        <button class="nav-mobile-btn" id="mobile-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
     </header>
 
-    <main class="relative z-10 pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+    <div id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+        <a href="#about">About</a>
+        <a href="#stack">Stack</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#writing">Writing</a>
+        <a href="#contact">Contact</a>
+    </div>
 
-        <section class="min-h-[80vh] flex flex-col justify-center max-w-4xl pt-20 fade-in-up">
-            <div class="flex items-center space-x-3 mb-8">
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                </span>
-                <span class="text-sm font-medium text-gray-400 tracking-wide">Available for roles starting May 2026</span>
-            </div>
+    <main>
 
-            <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight tracking-tight mb-6">
-                Hi, I'm Tanisha. <br>
-                <span class="text-gray-500">I build backend logic <br> and cloud infrastructure.</span>
-            </h1>
-
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed mb-8">
-                I am an AWS Certified Cloud Practitioner and final-year student in India. I love organizing massive tech events, but right now, my main focus is writing clean Python and understanding how the internet works under the hood.
-            </p>
-
-            <div class="flex flex-wrap items-center gap-6 mb-12">
-                <a href="Tanisha-resume-2026.pdf" target="_blank" class="px-6 py-3 font-mono text-xs uppercase tracking-widest bg-purple-500/10 text-purple-400 border border-purple-500/50 rounded-md hover:bg-purple-500 hover:text-white transition-all shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    [ Resume.pdf ]
-                </a>
-                
-                <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-mono text-xs uppercase tracking-widest pb-1 border-b border-transparent hover:border-white">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    LinkedIn
-                </a>
-
-                <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-mono text-xs uppercase tracking-widest pb-1 border-b border-transparent hover:border-white">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    GitHub
-                </a>
+        <!-- HERO -->
+        <section id="hero">
+            <div class="wrap">
+                <div class="hero-eyebrow">
+                    <span class="avail-dot"></span>
+                    <span>Available for roles from May 2026</span>
+                </div>
+                <h1 class="hero-headline">
+                    <span class="hl"><span>Hi, I'm Tanisha.</span></span>
+                    <span class="hl"><span>I build <em>backend logic</em></span></span>
+                    <span class="hl"><span><em>and cloud infrastructure.</em></span></span>
+                </h1>
+                <p class="hero-body">AWS Certified Cloud Practitioner. Final-year student in India. I love organising massive tech events, but right now my focus is writing clean Python and understanding how the internet works under the hood.</p>
+                <div class="hero-cta">
+                    <a href="Tanisha-resume-2026.pdf" target="_blank" class="btn-primary">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Resume
+                    </a>
+                    <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+                    <a href="https://github.com/Tannishaa" target="_blank" class="btn-ghost">GitHub ↗</a>
+                </div>
             </div>
         </section>
 
-        <section id="about" class="py-12 fade-in-up">
-            <div class="max-w-5xl mx-auto px-4">
-                <div class="glass-panel overflow-hidden">
-                    <div class="terminal-header">
-                        <div class="terminal-dot bg-[#ff5f56]"></div>
-                        <div class="terminal-dot bg-[#ffbd2e]"></div>
-                        <div class="terminal-dot bg-[#27c93f]"></div>
-                        <div class="ml-3 text-xs font-mono text-gray-500">tanisha@server: ~/portfolio</div>
-                    </div>
+        <hr class="divider">
 
-                    <div class="p-8 md:p-12">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
-                            <div class="md:col-span-8">
-                                <div class="flex items-center gap-3 mb-6">
-                                    <span class="text-green-400 font-mono text-xl">></span>
-                                    <h3 class="text-xl md:text-2xl font-mono text-purple-400 tracking-tight">./fetch_background_data.sh</h3>
-                                </div>
-                                
-                                <div class="text-base text-gray-300 leading-relaxed font-mono"> 
-                                    <p class="font-bold text-white mb-6">I am a final-year BCA student at Banasthali Vidyapith with a deep interest in the "hidden" parts of the internet- the servers, databases, and logic that keep it all running.</p>
-                                    
-                                    <p class="mb-6">Over the last year, I validated my architecture knowledge by earning my AWS Cloud Practitioner certification, and honed my communication skills as a Workshop Lead for my university's national level tech fest, Mayukh.</p>
-                                    
-                                    <p class="inline">Now, I am stripping things back to basics. I am currently in a self-imposed engineering sprint, focusing entirely on mastering core Data Structures in Python and building out the backend architecture for my team's AI-driven final year project.</p>
-                                    
-                                    <span class="animate-pulse bg-white w-2 h-5 inline-block align-middle ml-1 mb-1"></span>
-                                </div>
+        <!-- STATS STRIP -->
+        <div class="stats-strip reveal">
+            <div class="stat-cell">
+                <div class="stat-num"><span class="counter" data-target="3">0</span><span class="accent">+</span></div>
+                <div class="stat-desc">Projects shipped</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-num"><span class="counter" data-target="500">0</span><span class="accent">+</span></div>
+                <div class="stat-desc">Attendees led</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-num"><span class="counter" data-target="815" data-decimal="true">0</span></div>
+                <div class="stat-desc">CGPA / 10.0</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-num"><span style="font-size:clamp(1.2rem,2.5vw,1.8rem)">CLF</span><span class="accent" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">-C02</span></div>
+                <div class="stat-desc">AWS Certified</div>
+            </div>
+        </div>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="wrap">
+                <div class="reveal">
+                    <p class="section-label">About</p>
+                    <div class="about-grid">
+                        <div class="about-text">
+                            <p>I'm a final-year BCA student at Banasthali Vidyapith with a deep interest in the "hidden" parts of the internet – the servers, databases, and logic that keep it all running.</p>
+                            <p>Over the last year I validated my architecture knowledge by earning my <strong>AWS Cloud Practitioner certification</strong>, and sharpened my communication skills as Workshop Lead for Mayukh, my university's national-level tech fest.</p>
+                            <p>Right now I'm in a focused engineering sprint – mastering core Data Structures in Python and building out the backend for my team's AI-driven final year project.</p>
+                        </div>
+                        <div class="about-meta">
+                            <div class="meta-item">
+                                <p class="meta-label">Currently building</p>
+                                <p class="meta-value">Sentinel AI-NIDS</p>
                             </div>
-
-                            <div class="md:col-span-4 space-y-8 pt-2 md:pt-1 border-t md:border-t-0 md:border-l border-white/5 md:pl-8">
-                                <div>
-                                    <h4 class="text-[10px] font-mono text-purple-400 uppercase tracking-widest mb-1">Status</h4>
-                                    <p class="text-white text-sm font-mono">Building Sentinel AI</p>
-                                </div>
-                                <div>
-                                    <h4 class="text-[10px] font-mono text-teal-400 uppercase tracking-widest mb-1">Education</h4>
-                                    <p class="text-white text-sm font-mono">Banasthali Vidyapith</p>
-                                    <p class="text-xs text-gray-400 font-mono mt-1">8.15 CGPA</p>
-                                </div>
-                                <div>
-                                    <h4 class="text-[10px] font-mono text-pink-400 uppercase tracking-widest mb-1">Location</h4>
-                                    <p class="text-white text-sm font-mono">Rajasthan, India</p>
-                                </div>
+                            <div class="meta-item">
+                                <p class="meta-label">Education</p>
+                                <p class="meta-value">Banasthali Vidyapith</p>
+                                <p class="meta-note">8.15 CGPA</p>
+                            </div>
+                            <div class="meta-item">
+                                <p class="meta-label">Location</p>
+                                <p class="meta-value">Alwar, Rajasthan</p>
+                            </div>
+                            <div class="meta-item">
+                                <p class="meta-label">Status</p>
+                                <p class="meta-value" style="color:#3d8c4b;font-size:0.85rem">Open to work</p>
+                            </div>
+                            <div class="meta-item">
+                                <p class="meta-label">Languages</p>
+                                <p class="meta-value">English · Hindi</p>
+                                <p class="meta-note">French (Diploma)</p>
                             </div>
                         </div>
                     </div>
@@ -296,238 +149,252 @@
             </div>
         </section>
 
-        <section id="tech-stack" class="py-24 fade-in-up border-t border-white/5">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-12">
-                    <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Technical Arsenal</h2>
-                    <h3 class="text-3xl font-medium text-white tracking-tight">The tools I use to build.</h3>
-                </div>
+        <hr class="divider">
 
-                <div class="space-y-10">
-                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8 border-l-2 border-white/10 pl-6 py-2">
-                        <span class="text-white font-semibold w-40 tracking-wide text-lg pt-1">Cloud & Infra</span>
-                        <div class="flex flex-wrap items-center gap-3">
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-orange-500/50 hover:bg-white/5 transition-all group">
-    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14.07 15.11c-.96 0-1.68-.26-2.09-.75-.41-.49-.62-1.15-.62-2.01v-2.34c0-.85.21-1.52.62-2.01.41-.49 1.13-.75 2.09-.75s1.68.26 2.09.75c.41.49.62 1.15.62 2.01v2.34c0 .85-.21 1.522-.62 2.015-.41.493-1.13.755-2.09.755zm1.5-4.57c0-.285-.06-.5-.18-.64-.13-.14-.33-.22-.61-.22-.27 0-.47.07-.6.22-.13.14-.2.36-.2.64v1.55c0 .28.07.5.2.64.13.14.33.22.6.22.28 0 .48-.07.61-.22.13-.14.18-.36.18-.64v-1.55zM23 12.23c0 .55-.17.98-.5 1.3-.33.32-.83.48-1.5.48-.38 0-.71-.04-1-.12a2.3 2.3 0 01-.78-.37l.5-.84c.39.31.81.46 1.26.46.22 0 .39-.05.51-.14.12-.09.19-.23.19-.41 0-.13-.04-.24-.11-.32a.8.8 0 00-.3-.22c-.13-.05-.33-.12-.6-.2-.47-.14-.84-.35-1.08-.63-.25-.28-.37-.65-.37-1.1 0-.5.16-.89.48-1.18.32-.29.78-.44 1.38-.44.31 0 .61.03.88.1.28.07.52.18.71.33l-.47.82a1.86 1.86 0 00-1.07-.37c-.17 0-.31.04-.41.13-.1.08-.15.2-.15.36 0 .11.03.21.1.29.06.07.15.14.27.2.12.06.29.12.52.2.53.17 1.13.4 1.41.69.28.28.42.68.42 1.18zM8.33 21.03c-1.59-.51-3.08-1.29-4.43-2.31a12 12 0 01-3.66-4.22c-.17-.33.06-.68.42-.64 1.7.2 3.4.38 4.89.54 1.64-.17 3.24-.72 4.67-1.6.3-.19.68.04.64.4-.11 1.05-.51 2.04-1.16 2.88a7.22 7.22 0 01-3.52 2.37c-.36.1-.55.48-.37.8a9.42 9.42 0 002.52 2.79c.33.26.11.79-.29.83a15.86 15.86 0 01-4.71-.3c-.43-.08-.45-.7-.03-.82 1.54-.42 3.04-.92 4.48-1.48.04-.01.07-.05.1-.06z" fill="#FF9900"/>
-    </svg>
-    AWS (Certified)
-</span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/terraform/terraform-original.svg" class="w-4 h-4" alt="Terraform">
-                                Terraform
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" class="w-5 h-5" alt="Docker">
-                                Docker
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg" class="w-4 h-4" alt="Redis">
-                                Redis
-                            </span>
-                        </div>
-                    </div>
+        <!-- STACK -->
+        <section id="stack">
+            <div class="wrap reveal">
+                <p class="section-label">Technical</p>
+                <h2 class="section-title">What I work <em>with</em></h2>
 
-                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8 border-l-2 border-white/10 pl-6 py-2">
-                        <span class="text-white font-semibold w-40 tracking-wide text-lg pt-1">Backend & Logic</span>
-                        <div class="flex flex-wrap items-center gap-3">
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" class="w-4 h-4" alt="Python">
-                                Python
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#4053D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
-                                </svg>
-                                DynamoDB
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" class="w-4 h-4" alt="Java">
-                                Java
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <span class="text-white font-bold font-mono text-sm">{ }</span>
-                                REST APIs
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8 border-l-2 border-white/10 pl-6 py-2">
-                        <span class="text-white font-semibold w-40 tracking-wide text-lg pt-1">Frontend & Tools</span>
-                        <div class="flex flex-wrap items-center gap-3">
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" class="w-4 h-4 invert opacity-80" alt="Next.js">
-                                Next.js
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" class="w-4 h-4" alt="Git">
-                                Git / GitHub
-                            </span>
-                            <span class="flex items-center gap-2 border border-white/5 bg-black/30 rounded-md px-3 py-1.5 text-sm text-gray-300 hover:border-white/20 hover:bg-white/5 transition-all">
-                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg" class="w-4 h-4" alt="Linux">
-                                Linux
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <table class="stack-table">
+                    <tbody>
+                        <tr>
+                            <td class="stack-cat-cell">Cloud &amp; AWS</td>
+                            <td class="stack-pills-cell">
+                                <div class="stack-pills">
+                                    <span class="pill pill-cert">AWS (CLF-C02)</span>
+                                    <span class="pill">Lambda</span>
+                                    <span class="pill">S3</span>
+                                    <span class="pill">SQS</span>
+                                    <span class="pill">SNS</span>
+                                    <span class="pill">DynamoDB</span>
+                                    <span class="pill">IAM</span>
+                                    <span class="pill">API Gateway</span>
+                                    <span class="pill">CloudWatch</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="stack-cat-cell">Backend</td>
+                            <td class="stack-pills-cell">
+                                <div class="stack-pills">
+                                    <span class="pill">Python</span>
+                                    <span class="pill">FastAPI</span>
+                                    <span class="pill">Flask</span>
+                                    <span class="pill">Boto3</span>
+                                    <span class="pill">Pytest</span>
+                                    <span class="pill">Redis</span>
+                                    <span class="pill">SQL</span>
+                                    <span class="pill">REST APIs</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="stack-cat-cell">DevOps &amp; Infra</td>
+                            <td class="stack-pills-cell">
+                                <div class="stack-pills">
+                                    <span class="pill">Terraform</span>
+                                    <span class="pill">Docker</span>
+                                    <span class="pill">Git</span>
+                                    <span class="pill">CI/CD</span>
+                                    <span class="pill">Linux</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="stack-cat-cell">Frontend</td>
+                            <td class="stack-pills-cell">
+                                <div class="stack-pills">
+                                    <span class="pill">Next.js</span>
+                                    <span class="pill">React</span>
+                                    <span class="pill">Tailwind CSS</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
-        <section id="projects" class="py-24 fade-in-up border-t border-white/5">
-            <div class="max-w-4xl mx-auto">
-                
-                <div class="flex justify-between items-end mb-16">
+
+        <hr class="divider">
+
+        <!-- PROJECTS -->
+        <section id="projects">
+            <div class="wrap reveal">
+                <div class="projects-hd">
                     <div>
-                        <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Proof of Work</h2>
-                        <h3 class="text-3xl font-medium text-white tracking-tight">Featured Projects</h3>
+                        <p class="section-label">Work</p>
+                        <h2 class="section-title">Featured <em>projects</em></h2>
                     </div>
-                    <a href="https://github.com/Tannishaa" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors pb-1 border-b border-gray-700 hover:border-white">View GitHub</a>
+                    <a href="https://github.com/Tannishaa" target="_blank" class="btn-ghost" style="margin-bottom:6px">All projects ↗</a>
                 </div>
 
-                <div class="space-y-12">
-                    
-                    <div class="glass-panel p-8 premium-hover cursor-pointer">
-                        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
-                            <h4 class="text-2xl font-medium text-white">Sentinel: AI-Driven NIDS</h4>
-                           <span class="text-[10px] font-mono mt-2 md:mt-0 uppercase tracking-widest px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">Final Year Project</span>
-                        </div>
-                        <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
-                            A team project building an AI-driven Network Intrusion Detection System. I am responsible for the core <strong>Python backend</strong>- specifically writing the logic that analyzes network packets in real-time to flag security threats before they escalate.
-                        </p>
-                        <div class="flex items-center gap-4 text-sm font-mono text-gray-500 mb-6">
-                            <span>Python</span> • <span>Scapy</span> • <span>FastAPI</span> • <span>Machine Learning</span>
-                        </div>
+                <div class="project-card">
+                    <span class="proj-num" aria-hidden="true">01</span>
+                    <div class="project-head">
+                        <h3 class="project-title">Sentinel: AI-Driven NIDS</h3>
+                        <span class="project-badge badge-rust">Final Year</span>
                     </div>
+                    <p class="proj-tag-line">A net that watches the network.</p>
+                    <p class="project-body">A team project building an AI-driven Network Intrusion Detection System. I'm responsible for the core <strong>Python backend</strong> – logic that analyses network packets in real-time and flags security threats before they escalate.</p>
+                    <p class="project-stack">Python · Scapy · FastAPI · Machine Learning</p>
+                </div>
 
-                    <div class="glass-panel p-8 premium-hover cursor-pointer">
-                        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
-                            <h4 class="text-2xl font-medium text-white">Flux-Order: Ticketing Engine</h4>
-                            <span class="text-[10px] font-mono mt-2 md:mt-0 uppercase tracking-widest px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">Cloud Architecture</span>
-                        </div>
-                        <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
-                            I wanted to understand how applications survive flash sales. I built a ticketing backend and used <strong>Redis Distributed Locking</strong> to solve a classic race condition: preventing two users from buying the exact same ticket at the exact same millisecond. Automated the AWS infrastructure using Terraform.
-                        </p>
-                        <div class="flex items-center gap-4 text-sm font-mono text-gray-500 mb-6">
-                            <span>Next.js</span> • <span>Terraform</span> • <span>Redis</span> • <span>AWS SQS</span>
-                        </div>
-                        <div class="flex gap-6">
-                            <a href="https://github.com/Tannishaa/flux-order" target="_blank" class="text-sm text-white hover:text-green-400 transition-colors flex items-center gap-2">
-                                <span>Source Code</span> <span class="text-lg">↗</span>
-                            </a>
-                        </div>
+                <div class="project-card">
+                    <span class="proj-num" aria-hidden="true">02</span>
+                    <div class="project-head">
+                        <h3 class="project-title">Flux-Order: Ticketing Engine</h3>
+                        <span class="project-badge badge-teal">Cloud Architecture</span>
                     </div>
+                    <p class="proj-tag-line">Two people. One seat. Same millisecond.</p>
+                    <p class="project-body">I wanted to understand how apps survive flash sales. Built a ticketing backend using <strong>Redis Distributed Locking</strong> to prevent two users from buying the same ticket at the exact same millisecond. Infrastructure automated with Terraform.</p>
+                    <p class="project-stack">Next.js · Python · Redis · AWS SQS · DynamoDB · Terraform</p>
+                    <div class="project-links"><a href="https://github.com/Tannishaa/flux-order" target="_blank">Source Code ↗</a></div>
+                </div>
 
-                    <div class="glass-panel p-8 premium-hover cursor-pointer">
-                        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
-                            <h4 class="text-2xl font-medium text-white">Bill-E: Serverless Risk Engine</h4>
-                           <span class="text-[10px] font-mono mt-2 md:mt-0 uppercase tracking-widest px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">Event-Driven AWS</span>
-                        </div>
-                        <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mb-6">
-                            An exploration into serverless computing and cost optimization. This system uses an event-driven pipeline (S3 triggering Lambda) to run OCR on receipts and flag fraudulent anomalies. The best part? The decoupled architecture means it costs $0 to run when idle.
-                        </p>
-                        <div class="flex flex-wrap items-center gap-4 text-sm font-mono text-gray-500 mb-6">
-                            <span>AWS Lambda</span> • <span>S3</span> • <span>SNS</span> • <span>Python</span>
-                        </div>
-                        <div class="flex gap-6">
-                            <a href="https://github.com/Tannishaa/bill-e-audit" target="_blank" class="text-sm text-white hover:text-purple-400 transition-colors flex items-center gap-2">
-                                <span>GitHub</span> <span class="text-lg">↗</span>
-                            </a>
-                            <a href="https://bill-e-audit.streamlit.app" target="_blank" class="text-sm text-white hover:text-purple-400 transition-colors flex items-center gap-2">
-                                <span>Live Demo</span> <span class="text-lg">↗</span>
-                            </a>
-                        </div>
+                <div class="project-card">
+                    <span class="proj-num" aria-hidden="true">03</span>
+                    <div class="project-head">
+                        <h3 class="project-title">Bill-E: Serverless Risk Engine</h3>
+                        <span class="project-badge badge-stone">Event-Driven</span>
                     </div>
-
+                    <p class="proj-tag-line">Costs $0 when idle. By design.</p>
+                    <p class="project-body">An exploration into serverless computing and cost optimisation. An event-driven pipeline (S3 → SQS → Lambda) runs OCR on receipts and flags fraudulent anomalies, firing SNS alerts for anything scoring above 50. Decoupled architecture means it costs <strong>$0 when idle.</strong></p>
+                    <p class="project-stack">AWS Lambda · S3 · SQS · SNS · Python</p>
+                    <div class="project-links">
+                        <a href="https://github.com/Tannishaa/bill-e-audit" target="_blank">GitHub ↗</a>
+                        <a href="https://bill-e-audit.streamlit.app" target="_blank">Live Demo ↗</a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="experience" class="py-24 fade-in-up border-t border-white/5">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-16">
-                    <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Beyond the Editor</h2>
-                    <h3 class="text-3xl font-medium text-white tracking-tight">Experience & Leadership</h3>
-                </div>
+        <hr class="divider">
 
-                <div class="group flex flex-col md:flex-row md:items-baseline md:justify-between border-l-2 border-purple-500/50 pl-6 hover:border-purple-400 transition-colors mb-12">
-                    <div class="max-w-xl">
-                        <h4 class="text-xl font-medium text-white mb-1">Workshop Lead (Core Team)</h4>
-                        <p class="text-sm text-purple-400 font-mono mb-4">Mayukh — National Level Tech Fest</p>
-                        
-                        <p class="text-gray-400 text-base leading-relaxed mb-4">
-                            Successfully led the end-to-end logistics for technical workshops in the 2026 edition after being promoted from the 2025 sub-core team. Managed speaker relations, resource allocation, and mentored a sub-core team to deliver high-impact sessions for a national audience.
-                        </p>
-                        
-                        <div class="flex items-center gap-3 text-[10px] font-mono">
-                            <span class="border border-purple-500/30 px-2 py-1 bg-purple-500/10 text-purple-300">2026: Core Lead</span>
-                            <span class="border border-white/10 px-2 py-1 bg-black/20 text-gray-400">2025: Sub-Core</span>
-                        </div>
-                    </div>
-                    <span class="text-xs text-gray-500 font-mono mt-4 md:mt-0 uppercase tracking-widest text-right">
-                        Jan 2025 – Mar 2026<br>
-                        <span class="text-[10px] opacity-50 block mt-1">(Seasonal)</span>
-                    </span>
-                </div>
+        <!-- EXPERIENCE -->
+        <section id="experience">
+            <div class="wrap reveal">
+                <p class="section-label">Beyond the editor</p>
+                <h2 class="section-title">Experience &amp; <em>leadership</em></h2>
 
-                <div class="group flex flex-col md:flex-row md:items-baseline md:justify-between border-l-2 border-purple-500/50 pl-6 hover:border-purple-400 transition-colors mb-12">
-                    <div class="max-w-xl">
-                        <h4 class="text-xl font-medium text-white mb-1">AWS Certified Cloud Practitioner</h4>
-                        <p class="text-sm text-purple-400 font-mono mb-4">Amazon Web Services</p>
-                        <p class="text-gray-400 text-base leading-relaxed">
-                            Validated my foundational understanding of cloud concepts, security, and architecture. Taking this certification was the stepping stone that bridged the gap between my traditional college syllabus and real-world infrastructure.
-                        </p>
-                    </div>
-                    <span class="text-xs text-gray-500 font-mono mt-4 md:mt-0 uppercase tracking-widest">Achieved 2025</span>
-                </div>
-
-                <div class="group flex flex-col md:flex-row md:items-baseline md:justify-between border-l-2 border-purple-500/50 pl-6 hover:border-purple-400 transition-colors">
-                    <div class="max-w-xl">
-                        <h4 class="text-xl font-medium text-white mb-1">Bachelor of Computer Applications</h4>
-                        <p class="text-sm text-purple-400 font-mono mb-4">Banasthali Vidyapith</p>
-                        <p class="text-gray-400 text-base leading-relaxed">
-                            Final-year student maintaining an 8.15 CGPA. Built a strong foundation in C, Java, and core computing principles before pivoting my focus heavily toward Python and cloud-native backend development.
-                        </p>
-                    </div>
-                    <span class="text-xs text-gray-500 font-mono mt-4 md:mt-0 uppercase tracking-widest">Graduating May 2026</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-24 fade-in-up border-t border-white/5">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div class="exp-item">
                     <div>
-                        <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-2">Consistency</h2>
-                        <h3 class="text-3xl font-medium text-white tracking-tight">Code Activity.</h3>
+                        <h3 class="exp-role">Workshop Lead – Core Team</h3>
+                        <p class="exp-org">Mayukh Tech Fest · Banasthali Vidyapith</p>
+                        <p class="exp-desc">Led end-to-end logistics for technical workshops in the 2026 edition after being promoted from the 2025 sub-core team. Managed speaker relations, resource allocation, and coordinated resources for 500+ attendees. Mentored a sub-core team to execute live events.</p>
+                        <div class="exp-badges">
+                            <span class="exp-badge active">2026 Core Lead</span>
+                            <span class="exp-badge">2025 Sub-Core</span>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-500 font-mono">Tracking daily logic & backend commits</p>
+                    <div class="exp-date">Jan 2025 – Mar 2026<br><span style="opacity:0.5">Seasonal</span></div>
                 </div>
-                
-                <div class="w-full overflow-hidden opacity-80 hover:opacity-100 transition-all duration-500">
-                    <img src="https://ghchart.rshah.org/7000df/Tannishaa" alt="Tanisha's Github Chart" class="w-full h-auto" loading="lazy">
+
+                <div class="exp-item">
+                    <div>
+                        <h3 class="exp-role">AWS Certified Cloud Practitioner</h3>
+                        <p class="exp-org">Amazon Web Services · CLF-C02</p>
+                        <p class="exp-desc">Validated foundational understanding of cloud concepts, security, and architecture. The stepping stone that bridged the gap between my college syllabus and real-world infrastructure.</p>
+                    </div>
+                    <div class="exp-date">Achieved 2025</div>
+                </div>
+
+                <div class="exp-item">
+                    <div>
+                        <h3 class="exp-role">Bachelor of Computer Applications</h3>
+                        <p class="exp-org">Banasthali Vidyapith</p>
+                        <p class="exp-desc">Final-year student, 8.15 CGPA. Built a strong foundation in C, Java, and core computing before pivoting toward Python and cloud-native backend development.</p>
+                    </div>
+                    <div class="exp-date">Graduating May 2026</div>
                 </div>
             </div>
         </section>
 
-        <section id="contact" class="py-32 fade-in-up border-t border-white/5">
-            <div class="max-w-4xl mx-auto">
-                <div class="max-w-2xl">
-                    <h2 class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">What's Next?</h2>
-                    <h3 class="text-5xl md:text-6xl font-medium text-white tracking-tight mb-6">Let's build something.</h3>
-                    
-                    <p class="text-gray-400 text-lg leading-relaxed mb-12">
-                        I'm actively looking for full-time backend or cloud roles starting after I graduate in May 2026. Whether you have an open position, want to talk about AWS architecture, or just want to say hi-my inbox is open.
-                    </p>
+        <hr class="divider">
 
-                    <div class="flex flex-wrap items-center gap-8 font-mono text-sm">
-                        <a href="mailto:tanisha17016@gmail.com?subject=Hi%20Tanisha!" class="text-white hover:text-purple-400 transition-colors flex items-center gap-2 pb-1 border-b border-transparent hover:border-purple-400">
-                            <span>Send an Email</span> <span class="text-lg">↗</span>
-                        </a>
-                        <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 pb-1 border-b border-transparent hover:border-white">
-                            <span>LinkedIn</span> <span class="text-lg">↗</span>
-                        </a>
-                        <a href="https://github.com/Tannishaa" target="_blank" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 pb-1 border-b border-transparent hover:border-white">
-                            <span>GitHub</span> <span class="text-lg">↗</span>
-                        </a>
+        <!-- ACTIVITY -->
+        <section id="activity">
+            <div class="wrap reveal">
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem">
+                    <div>
+                        <p class="section-label">Consistency</p>
+                        <h2 class="section-title" style="margin-bottom:0">Code <em>activity</em></h2>
+                    </div>
+                    <p style="font-family:'Syne',sans-serif;font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px">Daily commits · backend focus</p>
+                </div>
+                <div class="chart-wrap">
+                    <img src="https://ghchart.rshah.org/d4500a/Tannishaa" alt="Tanisha's GitHub contribution chart" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- WRITING / BLOG -->
+        <section id="writing">
+            <div class="wrap reveal">
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:3.5rem">
+                    <div>
+                        <p class="section-label">Writing</p>
+                        <h2 class="section-title" style="margin-bottom:0">Things I've <em>figured out.</em></h2>
+                    </div>
+                    <span class="btn-ghost" style="cursor:default;opacity:0.4;margin-bottom:6px">More coming soon</span>
+                </div>
+
+                <div class="blog-grid">
+                    <a href="#" class="blog-card">
+                        <p class="blog-tag">Distributed Systems</p>
+                        <h3 class="blog-title">Why Redis Distributed Locks Actually Solve the Double-Booking Problem</h3>
+                        <p class="blog-excerpt">I built a ticketing engine and learned the hard way that optimistic locking isn't enough when two threads hit the same resource in the same millisecond. Here's what a Redis mutex actually does.</p>
+                        <div class="blog-meta">
+                            <span>Feb 2026 · 5 min</span>
+                            <span class="blog-arrow">↗</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card">
+                        <p class="blog-tag">Serverless</p>
+                        <h3 class="blog-title">The $0 Architecture: How Event-Driven Serverless Actually Achieves Idle-Cost Efficiency</h3>
+                        <p class="blog-excerpt">Everyone says serverless is cheap. Not everyone explains why – or when it isn't. Bill-E taught me exactly where the cost boundaries are in an S3 → SQS → Lambda pipeline.</p>
+                        <div class="blog-meta">
+                            <span>Jan 2026 · 7 min</span>
+                            <span class="blog-arrow">↗</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card">
+                        <p class="blog-tag">Real-Time Systems</p>
+                        <h3 class="blog-title">What Building a Packet Sniffer Taught Me About How the Internet Actually Works</h3>
+                        <p class="blog-excerpt">Before Sentinel, I thought I understood TCP/IP. Writing Scapy code that parses raw packets in real-time changed that. The gap between theory and what actually moves across the wire is enormous.</p>
+                        <div class="blog-meta">
+                            <span>Mar 2026 · 6 min</span>
+                            <span class="blog-arrow">↗</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="wrap reveal">
+                <p class="section-label">What's next</p>
+                <div class="contact-grid">
+                    <h2 class="contact-headline">
+                        Let's build<br>
+                        <em>something</em><br>
+                        together.
+                    </h2>
+                    <div class="contact-right">
+                        <p>I'm actively looking for full-time backend or cloud roles starting after I graduate in May 2026. Whether you have an open position, want to talk AWS architecture, or just want to say hi – my inbox is open.</p>
+                        <div>
+                            <a href="mailto:Tanisha17016@gmail.com" class="clink"><span>Send an Email</span><span class="arr">↗</span></a>
+                            <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="clink"><span>LinkedIn</span><span class="arr">↗</span></a>
+                            <a href="https://github.com/Tannishaa" target="_blank" class="clink"><span>GitHub</span><span class="arr">↗</span></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -535,78 +402,18 @@
 
     </main>
 
-    <footer class="py-8 border-t border-white/5 mt-auto">
-        <div class="max-w-4xl mx-auto px-4 md:px-0 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-gray-600">
-            <p>© 2026 Tanisha. All rights reserved.</p>
+    <hr class="divider">
+    <footer>
+        <div class="wrap footer-inner">
+            <p>© 2026 Tanisha</p>
+            <p>Cloud Engineer · Backend Developer</p>
         </div>
     </footer>
+
 </div>
 
-<script>
-    // --- 1. BOOT SEQUENCE ---
-    const bootLines = [
-        "Initializing AWS Environment...",
-        "Establishing secure connection to ap-south-1...",
-        "Loading Tanisha_Profile.sys...",
-        "Fetching Sentinel AI-NIDS status: [ONLINE]",
-        "System ready. Welcome, Guest."
-    ];
-    const bootContainer = document.getElementById('boot-text');
-    const bootScreen = document.getElementById('boot-screen');
-    const mainWrapper = document.getElementById('main-wrapper');
-    let delay = 0;
 
-    bootLines.forEach((line) => {
-        setTimeout(() => {
-            const p = document.createElement('p');
-            p.textContent = `> ${line}`;
-            bootContainer.appendChild(p);
-        }, delay);
-        delay += 300; 
-    });
-
-    setTimeout(() => {
-        if(bootScreen && mainWrapper) {
-            bootScreen.classList.add('boot-hidden');
-            mainWrapper.classList.add('loaded');
-            setTimeout(() => bootScreen.style.display = 'none', 800);
-        }
-    }, delay + 400);
-
-    // --- 2. FLASHLIGHT EFFECT TRACKER ---
-    const flashlight = document.getElementById('flashlight');
-    if(flashlight) {
-        document.addEventListener('mousemove', (e) => {
-            flashlight.style.setProperty('--x', `${e.clientX}px`);
-            flashlight.style.setProperty('--y', `${e.clientY}px`);
-        });
-    }
-
-    // --- 3. SCROLL & MENU ANIMATIONS (Optimized for speed) ---
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileBtn = document.getElementById('mobile-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if(mobileBtn) {
-            mobileBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                mobileMenu.classList.toggle('flex');
-            });
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { 
-            threshold: 0, 
-            rootMargin: "0px 0px 250px 0px" /* <-- Triggers the load before you even see it! */
-        });
-
-        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
-    });
-</script>
+<script src="app.js"></script>
 </body>
 </html>
+ 
