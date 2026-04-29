@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Building a Packet Sniffer Taught Me About How the Internet Actually Works – Tanisha</title>
+    <meta name="description" content="Before Sentinel, I thought I understood TCP/IP. Writing code that parses raw packets in real-time changed that. The gap between theory and what actually moves across the wire is enormous.">
+    <meta property="og:type"        content="article">
+    <meta property="og:title"       content="What Building a Packet Sniffer Taught Me About How the Internet Actually Works">
+    <meta property="og:description" content="Before Sentinel, I thought I understood TCP/IP. Writing code that parses raw packets in real-time changed that. The gap between theory and what actually moves across the wire is enormous.">
+    <meta property="og:url"         content="https://tanisha.dev/sentinel-packet-sniffer.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;600;700&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Styles.css">
+    <style>
+        .post-wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 110px clamp(1.5rem, 5vw, 3.5rem) 100px;
+        }
+        .post-back {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.68rem; font-weight: 500;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--muted); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-bottom: 3rem; transition: color 0.2s;
+        }
+        .post-back:hover { color: var(--cream); }
+        .post-tag {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.64rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--rust); margin-bottom: 1.1rem;
+        }
+        .post-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 400; letter-spacing: -0.022em; line-height: 1.1;
+            color: var(--cream); margin-bottom: 1.2rem;
+        }
+        .post-byline {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.72rem; letter-spacing: 0.08em;
+            color: var(--muted);
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 2.8rem;
+            padding-bottom: 2.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .post-byline .sep { opacity: 0.3; }
+
+        .post-body {
+            font-size: 1.05rem; font-weight: 300;
+            line-height: 1.9; color: var(--dimmed);
+        }
+        .post-body p { margin-bottom: 1.6rem; }
+        .post-body p:last-child { margin-bottom: 0; }
+        .post-body h2 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.4rem, 3vw, 1.75rem);
+            font-weight: 400; letter-spacing: -0.015em;
+            color: var(--cream); margin: 3rem 0 1.2rem;
+        }
+        .post-body strong { color: var(--cream); font-weight: 500; }
+        .post-body code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: rgba(240,236,224,0.07);
+            border: 1px solid var(--border);
+            padding: 2px 7px; border-radius: 3px;
+            color: var(--cream); white-space: nowrap;
+        }
+        
+        /* lists */
+        .post-body ul {
+            margin: 1.6rem 0;
+            padding-left: 1.5rem;
+            list-style-type: none;
+        }
+        .post-body ul li {
+            margin-bottom: 1.2rem;
+            position: relative;
+            line-height: 1.75;
+        }
+        .post-body ul li::before {
+            content: "→";
+            position: absolute;
+            left: -1.5rem;
+            color: var(--rust);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+        }
+
+        /* result box */
+        .result-box {
+            background: rgba(46,180,100,0.07);
+            border: 1px solid rgba(46,180,100,0.25);
+            border-radius: 6px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.8rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem; color: #4eca7f;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .result-box .result-icon { font-size: 1.1rem; opacity: 0.7; flex-shrink: 0; }
+
+        /* security callout — red-toned */
+        .security-box {
+            background: rgba(220,50,50,0.07);
+            border: 1px solid rgba(220,50,50,0.22);
+            border-radius: 6px;
+            padding: 1.3rem 1.5rem;
+            margin: 1.8rem 0;
+        }
+        .security-box .s-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: #e05a5a; margin-bottom: 0.7rem;
+        }
+        .security-box p {
+            font-size: 0.93rem; font-weight: 300;
+            line-height: 1.75; color: var(--dimmed);
+            margin: 0;
+        }
+
+        /* access design box — blue-toned */
+        .access-box {
+            background: rgba(80,130,220,0.07);
+            border: 1px solid rgba(80,130,220,0.2);
+            border-radius: 6px;
+            padding: 1.3rem 1.5rem;
+            margin: 1.8rem 0;
+        }
+        .access-box .a-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: #7aaaee; margin-bottom: 0.7rem;
+        }
+        .access-box p {
+            font-size: 0.93rem; font-weight: 300;
+            line-height: 1.75; color: var(--dimmed);
+            margin: 0;
+        }
+
+        /* post footer */
+        .post-footer {
+            margin-top: 5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 1.5rem;
+        }
+        .post-footer-left p {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+        }
+        .post-footer-left a {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem; font-weight: 400;
+            color: var(--cream); text-decoration: none; transition: color 0.2s;
+        }
+        .post-footer-left a:hover { color: var(--rust); }
+        .post-footer-prev { text-align: right; }
+        .post-footer-prev p { text-align: right; }
+    </style>
+</head>
+<body>
+<div id="site" class="revealed">
+
+    <header id="main-header">
+        <a href="index.html" class="nav-logo">Tanisha</a>
+        <ul class="nav-links">
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#projects">Projects</a></li>
+            <li><a href="index.html#writing">Writing</a></li>
+        </ul>
+        <div style="display:flex;align-items:center;gap:1.2rem">
+            <a href="index.html#contact" class="nav-hire">Hire me</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="post-wrap">
+
+            <a href="index.html#writing" class="post-back">← All posts</a>
+
+            <p class="post-tag">Real-Time Systems</p>
+            <h1 class="post-title">What Building a Packet Sniffer Taught Me About How the Internet Actually Works</h1>
+            <div class="post-byline">
+                <span>Tanisha</span>
+                <span class="sep">·</span>
+                <span>Mar 2026</span>
+                <span class="sep">·</span>
+                <span>6 min read</span>
+            </div>
+
+            <div class="post-body">
+
+                <p>I have always been a fan of the top-down approach to learning. Give me a compiler and a massive project idea, and I will figure out the underlying theory when something inevitably breaks.</p>
+
+                <p>For a long time, my understanding of networking was strictly theoretical. You sit in a computer science lecture, look at a neatly color-coded diagram of the OSI model, and nod along. You learn that TCP is reliable, UDP is fast, and IP addresses are like digital street names. It all sounds very civilized and orderly.</p>
+
+                <p>Then I decided to build Sentinel, a real-time Network Intrusion Detection System powered by a Random Forest AI.</p>
+
+                <p>To feed the AI, I needed to capture live network traffic. I opened up a terminal, wrote some code to parse raw packets off my Wi-Fi card, and hit run.</p>
+
+                <div class="result-box">
+                    <span class="result-icon">↳</span>
+                    <span>Spoiler alert: the internet is not civilized. It is complete, unfiltered chaos.</span>
+                </div>
+
+                <h2>The Illusion of the OSI Model</h2>
+
+                <p>When you learn about networking in a classroom, you picture data moving in perfect little envelopes. You imagine a polite handshake where your computer asks a server for a webpage, and the server politely hands it over.</p>
+
+                <p>Watching raw packets flood your terminal shatters that illusion instantly. The gap between theory and what actually moves across the wire is enormous.</p>
+
+                <div class="access-box">
+                    <div class="a-label">The Reality of the Wire</div>
+                    <p>When you build a packet sniffer, you realize the internet is just millions of machines aggressively yelling formatted bytes at each other over specific ports. There is no magic. Every single action you take online boils down to source IPs, destination ports, byte counts, and binary flags.</p>
+                </div>
+
+                <h2>The Anatomy of a Threat</h2>
+
+                <p>The whole point of Sentinel was to catch bad actors using anomaly-based detection. But an AI model cannot just look at a network and feel that something is wrong. It only understands numbers.</p>
+
+                <p>This forced me to get uncomfortably close to the transport layer. I had to rip apart the TCP headers and translate them into a comma-separated reality. If a packet came in with a SYN flag but never completed the connection, I had to extract that exact behavior.</p>
+
+                <div class="security-box">
+                    <div class="s-label">Visualizing a DoS Attack</div>
+                    <p>Suddenly, a Denial of Service attack was no longer just a cybersecurity buzzword. I could literally watch it happen on my screen. I could see an IP address rapid-firing packets with the S0 flag active, completely flooding Port 80, trying to drown the server in fake connection requests.</p>
+                </div>
+
+                <h2>Taming the Chaos</h2>
+
+                <p>Catching the packets was just the beginning. I quickly realized that a real intrusion detection system could not just be a single script. It had to be a living, breathing pipeline capable of handling high-speed traffic without crashing.</p>
+
+                <p>So, I built a polyglot architecture. Every language had to pull its own weight:</p>
+
+                <ul>
+                    <li><strong>The Edge (C++ & Npcap):</strong> If you want to catch live network traffic without dropping packets, you need raw speed. C++ ruthlessly stripped the headers off raw sockets at the data-link layer and streamed them forward via TCP.</li>
+                    <li><strong>The Brain (Python & Random Forest):</strong> Python is the undisputed king of machine learning. It caught the stream from the edge and ran the network features through an AI classifier to instantly spot anomalies.</li>
+                    <li><strong>The Memory (Java Spring Boot & MySQL):</strong> When the AI found a threat, it needed a rock-solid place to put it. Java provided a highly stable backend to catch those HTTP payloads and lock them securely into a relational database.</li>
+                    <li><strong>The Face (React):</strong> Security tools are useless if you cannot read them. A React frontend continuously polled the Java server to visualize the network volatility on a live dashboard.</li>
+                </ul>
+
+                <p>Getting four different languages to talk to each other synchronously across local ports was an absolute integration nightmare.</p>
+
+                <h2>The Turning Point</h2>
+
+                <p>That integration struggle changed everything about how I view software engineering.</p>
+
+                <p>When you build web apps, you usually live safely in the application layer. You rely on massive frameworks and libraries to handle the dirty work of actually moving your data from point A to point B. You call an API and trust that the internet will just figure it out.</p>
+
+                <p>Building Sentinel forced me to look under the hood. You see the raw bytes, the dropped packets, and the sheer volume of background noise that happens just to keep a simple website connected.</p>
+
+                <p>I started this project just wanting to build a cool AI security tool. I walked away with a profound respect for the absolute mess of protocols that somehow keeps the modern world running. Theory is great for passing exams. But if you really want to understand the internet, try catching it with your bare hands.</p>
+
+            </div>
+
+            <div class="post-footer">
+                <div class="post-footer-left post-footer-prev">
+                    <p>Previous post</p>
+                    <a href="serverless-zero-cost.html">← The $0 Architecture: Building a Serverless ETL Pipeline</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <hr class="divider">
+    <footer>
+        <div class="wrap footer-inner">
+            <p>© 2026 Tanisha</p>
+            <p>Cloud Engineer · Backend Developer</p>
+        </div>
+    </footer>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
