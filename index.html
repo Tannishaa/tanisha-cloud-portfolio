@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanisha – Cloud Engineer & Backend Developer</title>
+    <title>Tanisha - Cloud Engineer & Backend Developer</title>
     <meta name="description" content="Portfolio of Tanisha, AWS Certified Cloud Practitioner and Backend Developer building serverless systems.">
 
     <!-- Open Graph / Social Sharing -->
@@ -77,11 +77,11 @@
                 </h1>
                 <p class="hero-body">AWS Certified Cloud Practitioner. Final-year student in India. I love organising massive tech events, but right now my focus is writing clean Python and understanding how the internet works under the hood.</p>
                 <div class="hero-cta">
-                    <a href="Tanisha-resume-2026.pdf" target="_blank" class="btn-primary">
+                    <a href="resume2026.pdf" target="_blank" class="btn-primary">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         Resume
                     </a>
-                    <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+                    <a href="https://www.linkedin.com/in/tanisha-cloud/" target="_blank" class="btn-ghost">LinkedIn ↗</a>
                     <a href="https://github.com/Tannishaa" target="_blank" class="btn-ghost">GitHub ↗</a>
                 </div>
             </div>
@@ -92,7 +92,7 @@
         <!-- STATS STRIP -->
         <div class="stats-strip reveal">
             <div class="stat-cell">
-                <div class="stat-num"><span class="counter" data-target="3">0</span><span class="accent">+</span></div>
+                <div class="stat-num"><span class="counter" data-target="4">0</span><span class="accent">+</span></div>
                 <div class="stat-desc">Projects shipped</div>
             </div>
             <div class="stat-cell">
@@ -128,7 +128,7 @@
                             <div class="meta-item">
                                 <p class="meta-label">Education</p>
                                 <p class="meta-value">Banasthali Vidyapith</p>
-                                <p class="meta-note">8.15 CGPA</p>
+                                <p class="meta-note">BCA (AC-4) · 8.15 CGPA</p>
                             </div>
                             <div class="meta-item">
                                 <p class="meta-label">Location</p>
@@ -250,7 +250,10 @@
                     <p class="proj-tag-line">Two people. One seat. Same millisecond.</p>
                     <p class="project-body">I wanted to understand how apps survive flash sales. Built a ticketing backend using <strong>Redis Distributed Locking</strong> to prevent two users from buying the same ticket at the exact same millisecond. Infrastructure automated with Terraform.</p>
                     <p class="project-stack">Next.js · Python · Redis · AWS SQS · DynamoDB · Terraform</p>
-                    <div class="project-links"><a href="https://github.com/Tannishaa/flux-order" target="_blank">Source Code ↗</a></div>
+                    <div class="project-links">
+                        <a href="https://github.com/Tannishaa/flux-order" target="_blank">Source Code ↗</a>
+                        <a href="https://flux-cinema-frontend.vercel.app/" target="_blank">Live Demo ↗</a>
+                    </div>
                 </div>
 
                 <div class="project-card">
@@ -261,10 +264,24 @@
                     </div>
                     <p class="proj-tag-line">Costs $0 when idle. By design.</p>
                     <p class="project-body">An exploration into serverless computing and cost optimisation. An event-driven pipeline (S3 → SQS → Lambda) runs OCR on receipts and flags fraudulent anomalies, firing SNS alerts for anything scoring above 50. Decoupled architecture means it costs <strong>$0 when idle.</strong></p>
-                    <p class="project-stack">AWS Lambda · S3 · SQS · SNS · Python</p>
+                    <p class="project-stack">AWS Lambda · S3 · SQS · SNS · DynamoDB · Python · Next.js</p>
                     <div class="project-links">
-                        <a href="https://github.com/Tannishaa/bill-e-audit" target="_blank">GitHub ↗</a>
-                        <a href="https://bill-e-audit.streamlit.app" target="_blank">Live Demo ↗</a>
+                        <a href="https://github.com/Tannishaa/bill-e-audit" target="_blank">Source Code ↗</a>
+                        <a href="https://bill-e-audit.vercel.app/" target="_blank">Live Demo ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <span class="proj-num" aria-hidden="true">04</span>
+                    <div class="project-head">
+                        <h3 class="project-title">Vibe-Check: Serverless Sentiment API</h3>
+                        <span class="project-badge badge-teal">REST API</span>
+                    </div>
+                    <p class="proj-tag-line">Real-time feedback classification.</p>
+                    <p class="project-body">Deployed a public REST API via AWS API Gateway backed by a Python Lambda function to classify customer feedback sentiment. Features a cost-optimized rule-based classification engine with automated SNS crisis alerts for negative sentiment.</p>
+                    <p class="project-stack">AWS Lambda · API Gateway · DynamoDB · SNS · Python</p>
+                    <div class="project-links">
+                        <a href="https://github.com/Tannishaa/vibe-check" target="_blank">Source Code ↗</a>
                     </div>
                 </div>
             </div>
@@ -313,24 +330,6 @@
 
         <hr class="divider">
 
-        <!-- ACTIVITY -
-        <section id="activity">
-            <div class="wrap reveal">
-                <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem">
-                    <div>
-                        <p class="section-label">Consistency</p>
-                        <h2 class="section-title" style="margin-bottom:0">Code <em>activity</em></h2>
-                    </div>
-                    <p style="font-family:'Syne',sans-serif;font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px">Daily commits · backend focus</p>
-                </div>
-                <div class="chart-wrap">
-                    <img src="https://ghchart.rshah.org/d4500a/Tannishaa" alt="Tanisha's GitHub contribution chart" loading="lazy">
-                </div>
-            </div>
-        </section>
-
-        <hr class="divider">
-->
         <!-- WRITING / BLOG -->
         <section id="writing">
             <div class="wrap reveal">
@@ -389,10 +388,10 @@
                         together.
                     </h2>
                     <div class="contact-right">
-                        <p>I'm actively looking for full-time backend or cloud roles starting after I graduate in May 2026. Whether you have an open position, want to talk AWS architecture, or just want to say hi – my inbox is open.</p>
+                        <p>I'm actively looking for full-time backend or cloud roles starting after I graduate in May 2026. Whether you have an open position, want to talk AWS architecture, or just want to say hi - my inbox is open.</p>
                         <div>
-                            <a href="mailto:Tanisha17016@gmail.com" class="clink"><span>Send an Email</span><span class="arr">↗</span></a>
-                            <a href="https://linkedin.com/in/tanishas-profile" target="_blank" class="clink"><span>LinkedIn</span><span class="arr">↗</span></a>
+                            <a href="mailto:tanisha.cloud.dev@gmail.com" class="clink"><span>Send an Email</span><span class="arr">↗</span></a>
+                            <a href="https://www.linkedin.com/in/tanisha-cloud/" target="_blank" class="clink"><span>LinkedIn</span><span class="arr">↗</span></a>
                             <a href="https://github.com/Tannishaa" target="_blank" class="clink"><span>GitHub</span><span class="arr">↗</span></a>
                         </div>
                     </div>
@@ -412,8 +411,6 @@
 
 </div>
 
-
 <script src="App.js"></script>
 </body>
 </html>
- 
